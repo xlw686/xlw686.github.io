@@ -3,14 +3,14 @@
   <title>空唤晴</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="https://xlw686.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="https://xlw686.github.io/"/>
   <updated>2023-03-26T08:09:42.927Z</updated>
-  <id>http://example.com/</id>
+  <id>https://xlw686.github.io/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>空唤晴</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>人生思考</title>
-    <link href="http://example.com/2023/03/26/%E4%BA%BA%E7%94%9F%E6%80%9D%E8%80%83/"/>
-    <id>http://example.com/2023/03/26/%E4%BA%BA%E7%94%9F%E6%80%9D%E8%80%83/</id>
+    <link href="https://xlw686.github.io/2023/03/26/%E4%BA%BA%E7%94%9F%E6%80%9D%E8%80%83/"/>
+    <id>https://xlw686.github.io/2023/03/26/%E4%BA%BA%E7%94%9F%E6%80%9D%E8%80%83/</id>
     <published>2023-03-26T03:01:41.000Z</published>
     <updated>2023-03-26T08:09:42.927Z</updated>
     
@@ -39,8 +39,8 @@
   
   <entry>
     <title>第一篇文章</title>
-    <link href="http://example.com/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/"/>
-    <id>http://example.com/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</id>
+    <link href="https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/"/>
+    <id>https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</id>
     <published>2023-03-26T03:01:41.000Z</published>
     <updated>2023-03-26T03:01:41.649Z</updated>
     
@@ -60,8 +60,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2023/03/26/hello-world/"/>
-    <id>http://example.com/2023/03/26/hello-world/</id>
+    <link href="https://xlw686.github.io/2023/03/26/hello-world/"/>
+    <id>https://xlw686.github.io/2023/03/26/hello-world/</id>
     <published>2023-03-26T02:57:33.065Z</published>
     <updated>2023-03-26T02:56:53.574Z</updated>
     
