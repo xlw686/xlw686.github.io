@@ -6,7 +6,7 @@
   <link href="https://xlw686.github.io/atom.xml" rel="self"/>
   
   <link href="https://xlw686.github.io/"/>
-  <updated>2023-03-27T10:03:43.006Z</updated>
+  <updated>2023-03-27T10:09:47.623Z</updated>
   <id>https://xlw686.github.io/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>about</title>
+    <link href="https://xlw686.github.io/2023/03/26/about/"/>
+    <id>https://xlw686.github.io/2023/03/26/about/</id>
+    <published>2023-03-26T03:01:41.000Z</published>
+    <updated>2023-03-27T10:09:47.623Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="机器学习" scheme="https://xlw686.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="yan" scheme="https://xlw686.github.io/tags/yan/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>第一篇文章</title>
+    <link href="https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/"/>
+    <id>https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</id>
+    <published>2023-03-26T03:01:41.000Z</published>
+    <updated>2023-03-27T10:05:01.908Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="机器学习" scheme="https://xlw686.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="yan" scheme="https://xlw686.github.io/tags/yan/"/>
+    
+  </entry>
   
   <entry>
     <title>深度神经网络</title>
@@ -42,31 +92,6 @@
     <category term="yan" scheme="https://xlw686.github.io/tags/yan/"/>
     
     <category term="test" scheme="https://xlw686.github.io/tags/test/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第一篇文章</title>
-    <link href="https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/"/>
-    <id>https://xlw686.github.io/2023/03/26/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</id>
-    <published>2023-03-26T03:01:41.000Z</published>
-    <updated>2023-03-27T10:05:01.908Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="机器学习" scheme="https://xlw686.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="yan" scheme="https://xlw686.github.io/tags/yan/"/>
     
   </entry>
   
