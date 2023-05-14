@@ -419,13 +419,13 @@
 </li>
 </ul>
 <h4 id="配置连接"><a href="#配置连接" class="headerlink" title="配置连接"></a>配置连接</h4><p>Master 和 Slave 通过以下过程建立连接。</p>
-<p><img src="%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5.png" alt="x"></p>
+<p><img src="/pic/%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5.png" alt="x"></p>
 <p>相比于输入指令，我们一般直接修改 conf 文件夹内的配置文件，由机器自动建立连接。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Master</span> </span><br><span class="line">requirepass 123456                # 连接主服务器需要密码（可选）</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Slave</span></span><br><span class="line">slaveof 127.0.0.1 6379            # 根据套接字自动连接主服务器</span><br><span class="line">masterauth 123456                 # 主服务器密码</span><br></pre></td></tr></table></figure>
 
 
 <h4 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h4><p>Slave 会定期复制 Master 的持久化文件，以保证数据同步。</p>
-<p><img src="%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE.png" alt="x"></p>
+<p><img src="/pic/%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE.png" alt="x"></p>
 <p><strong>复制缓冲区</strong>：一个先入先出队列，用来存储 AOF 形式指令。由偏移量记录当前执行到的位置。</p>
 <ul>
 <li>如果开启 AOF ，在创建时就会开启复制缓冲区。（偏移量记录自己执行到的位置）</li>
@@ -439,7 +439,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Master</span></span><br><span class="line">repl-backlog-size 2mb                 # 修改缓冲区大小（默认 1mb）</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Slave</span></span><br><span class="line">slave-serve-stale-data no             # 不允许同步数据时读数据</span><br></pre></td></tr></table></figure>
 
 <h4 id="命令传播"><a href="#命令传播" class="headerlink" title="命令传播"></a>命令传播</h4><p>服务器每次启动都会随机生成一个运行 ID（40 位 16 进制字符） ，Master 和 Slave 之间正是依靠 Master 的运行 ID 相互识别。</p>
-<p><img src="%E5%91%BD%E4%BB%A4%E4%BC%A0%E6%92%AD.png" alt="x"></p>
+<p><img src="/pic/%E5%91%BD%E4%BB%A4%E4%BC%A0%E6%92%AD.png" alt="x"></p>
 <hr>
 <h2 id="Redis-潜在问题"><a href="#Redis-潜在问题" class="headerlink" title="Redis 潜在问题"></a>Redis 潜在问题</h2><h3 id="缓存故障"><a href="#缓存故障" class="headerlink" title="缓存故障"></a>缓存故障</h3><p>Redis 缓存技术常用于高并发情况下，有效减轻服务器和数据库负载。如果 Redis 出现问题导致无法均衡负载，就可能导致服务崩溃。</p>
 <ol>
@@ -648,9 +648,9 @@
       </a>
     
     
-      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/" class="article-nav-link">
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%9C%8D%E5%8A%A1%E5%99%A8/nginx/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Linux</div>
+        <div class="article-nav-title">nginx</div>
       </a>
     
   </nav>

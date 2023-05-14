@@ -126,7 +126,7 @@
 <hr>
 <h2 id="IOC-原理"><a href="#IOC-原理" class="headerlink" title="IOC 原理"></a>IOC 原理</h2><h3 id="代码耦合"><a href="#代码耦合" class="headerlink" title="代码耦合"></a>代码耦合</h3><p>实际开发中，我们如果在对象 A 内部去创建、修改或者注销另一个对象 B，这会导致对象之间非常复杂的依赖关系，不利于代码的维护更新。</p>
 <p>比如我们直接在上层类内调用了底层类的构造方法，一旦底层类的构造方法发生改变，就必须修改所有上层类的代码。</p>
-<p><img src="%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB.png"></p>
+<p><img src="/pic/%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB.png"></p>
 <h3 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h3><p>( Dependency Injection ) 我们用依赖注入的方式来降低耦合度。所谓依赖注入，就是把底层对象作为参数传入上层对象。避免底层类被修改后上层类代码也要随之改动。我们一般通过构造方法或者 setter 方法注入底层对象。</p>
 <ol>
 <li>设值注入：依赖的对象通过 setter 方法传入的，对象已经实例化，发生属性填充和依赖注入的时候。</li>
@@ -319,19 +319,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/05/14/javaee/spring/SpringSecurity/" class="article-nav-link">
+      <a href="/2023/05/14/javaee/spring/SpringBootService/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Spring Security
+            Spring Boot
           
         </div>
       </a>
     
     
-      <a href="/2023/05/14/javaee/spring/SpringSession/" class="article-nav-link">
+      <a href="/2023/05/14/javaee/spring/SpringController/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Spring Session</div>
+        <div class="article-nav-title">Spring Controller</div>
       </a>
     
   </nav>
