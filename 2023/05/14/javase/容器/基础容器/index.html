@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>基础容器 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-javase/容器/基础容器"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  基础容器
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/javase/%E5%AE%B9%E5%99%A8/%E5%9F%BA%E7%A1%80%E5%AE%B9%E5%99%A8/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javase/">javase</a> / <a class="article-category-link" href="/categories/javase/%E5%AE%B9%E5%99%A8/">容器</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="基础容器"><a href="#基础容器" class="headerlink" title="基础容器"></a>基础容器</h1><hr>
+<h2 id="基本接口"><a href="#基本接口" class="headerlink" title="基本接口"></a>基本接口</h2><p>java 提供了一些基础容器类，可以用特定的方式组织、存储和操作对象数据。这些集合框架分为两大分支：Collection 接口和 Map 接口。</p>
+<p>所有容器都定义在 java.util 文件夹内，使用时需要进行导入。</p>
+<h3 id="Collection-接口"><a href="#Collection-接口" class="headerlink" title="Collection 接口"></a>Collection 接口</h3><p>【集合】用特定的方式组织、存储和操作对象数据。有三个常用子接口 List 接口、Queue 接口、Set 接口。</p>
+<p>Collection 接口以及所有子接口和子方法 都定义在 java.util 文件夹内，使用时需进行导入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改</span></span><br><span class="line">collection.add(<span class="number">1</span>);                <span class="comment">// 添加元素</span></span><br><span class="line">collection.remove(<span class="number">1</span>);             <span class="comment">// 删除元素</span></span><br><span class="line">collection.clear();               <span class="comment">// 清除所有元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询</span></span><br><span class="line">collection.isEmpty();             <span class="comment">// 判断集合是否为空</span></span><br><span class="line">collection.size();                <span class="comment">// 返回集合元素个数</span></span><br><span class="line">collection.contains(<span class="number">1</span>):           <span class="comment">// 判断集合中是否含有元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 多集合操作</span></span><br><span class="line">collection.addAll(c2);            <span class="comment">// 并操作，添加其他集合中元素</span></span><br><span class="line">collection.removeAll(c2);         <span class="comment">// 减操作，删除和其他集合共有元素</span></span><br><span class="line">collection.retainAll(c2);         <span class="comment">// 交操作，只保留和其他集合共有元素 </span></span><br><span class="line">collection.equals(c2);            <span class="comment">// 判断是否和其他集合元素相同</span></span><br><span class="line">collection.containsAll(c2);       <span class="comment">// 判断是否包含其它集合所有元素  </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建迭代器</span></span><br><span class="line">Iterator&lt;Integer&gt; iter = collection.iterator();</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-接口"><a href="#List-接口" class="headerlink" title="List 接口"></a>List 接口</h3><p>【列表】元素有序，可以按索引操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改</span></span><br><span class="line">list.add(<span class="string">&quot;data1&quot;</span>);              <span class="comment">// 末尾添加元素</span></span><br><span class="line">list.add(<span class="number">0</span>, <span class="string">&quot;data0&quot;</span>);           <span class="comment">// 插入元素</span></span><br><span class="line">list.remove(<span class="number">0</span>);                 <span class="comment">// 按索引删除元素(int)</span></span><br><span class="line">list.remove(<span class="string">&quot;data&quot;</span>);            <span class="comment">// 按内容删除对象元素(Object)</span></span><br><span class="line">list.remove(<span class="keyword">new</span> <span class="title class_">Integer</span>(<span class="number">3</span>));    <span class="comment">// 按内容删除基础类型元素</span></span><br><span class="line">list.clear();                   <span class="comment">// 清除所有元素</span></span><br><span class="line">list.set(<span class="number">0</span>, <span class="string">&quot;data2&quot;</span>);           <span class="comment">// 修改元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找</span></span><br><span class="line">list.isEmpty();                 <span class="comment">// 判定是否为空</span></span><br><span class="line">list.size();                    <span class="comment">// 查询列表元素个数</span></span><br><span class="line">list.contains(<span class="string">&quot;data3&quot;</span>);         <span class="comment">// 判定是否含有元素</span></span><br><span class="line">list.get(<span class="number">1</span>);                    <span class="comment">// 按索引查找元素</span></span><br><span class="line">list.indexOf(<span class="string">&quot;data1&quot;</span>);          <span class="comment">// 查询索引号：如果有返回第一个，没有返回-1</span></span><br><span class="line">list.lastIndexOf(<span class="string">&quot;data1&quot;</span>);      <span class="comment">// 查询索引号：如果有返回最后一个，没有返回-1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 转化</span></span><br><span class="line">list.toString();                <span class="comment">// 转化为字符串</span></span><br><span class="line">list.toArray();                 <span class="comment">// 转化为 Object[] 数组</span></span><br><span class="line">(String [])list.toArray();      <span class="comment">// 转化为对象数组，但不能是基础类型</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Queue-接口"><a href="#Queue-接口" class="headerlink" title="Queue 接口"></a>Queue 接口</h3><p>【队列】元素有序，在队列尾插入/在队列首移除。常用 Deque 子接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//修改</span></span><br><span class="line">queue.offer(<span class="number">10</span>);                <span class="comment">// 队列尾插入元素，队列满返回 false</span></span><br><span class="line">queue.peek();                   <span class="comment">// 获取队列首元素，队列空返回 null</span></span><br><span class="line">queue.poll();                   <span class="comment">// 获取并移除队列首元素，队列空返回 null</span></span><br><span class="line">queue.clear();                  <span class="comment">// 清空元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* offer/peek/poll 方法可以用 add/get/remove 方法代替，但队列空/满时会抛出异常。 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找</span></span><br><span class="line">queue.isEmpty();                 <span class="comment">// 判定是否为空</span></span><br><span class="line">queue.size();                    <span class="comment">// 查询列表元素个数</span></span><br><span class="line">queue.contains(<span class="string">&quot;data3&quot;</span>);         <span class="comment">// 判定是否含有元素</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Deque-接口"><a href="#Deque-接口" class="headerlink" title="Deque 接口"></a>Deque 接口</h4><p>【双端队列】元素可以在两端进出。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">deque.offerFirst(e);            <span class="comment">// 队列首添加元素 </span></span><br><span class="line">deque.pollFirst();              <span class="comment">// 队列首移除元素</span></span><br><span class="line">deque.peekFirst();              <span class="comment">// 获取队列首元素</span></span><br><span class="line"></span><br><span class="line">deque.offerLast(e);	            <span class="comment">// 队列尾添加元素</span></span><br><span class="line">deque.pollLast();               <span class="comment">// 队列尾移除元素</span></span><br><span class="line">deque.peekLast();               <span class="comment">// 获取队列尾元素 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* offer/peek/poll 方法可以用 add/get/remove 方法代替，但队列空/满时会抛出异常。 */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-接口"><a href="#Set-接口" class="headerlink" title="Set 接口"></a>Set 接口</h3><p>【集】数据不可重复。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改</span></span><br><span class="line">set.add(<span class="string">&quot;data&quot;</span>);              <span class="comment">// 添加元素</span></span><br><span class="line">set.remove(<span class="string">&quot;data&quot;</span>);           <span class="comment">// 删除元素</span></span><br><span class="line">set.clear();                  <span class="comment">// 清除所有元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询</span></span><br><span class="line">set.get(<span class="number">1</span>);                   <span class="comment">// 按序号查找元素（仅限于有序的 set 接口）</span></span><br><span class="line">set.isEmpty();                <span class="comment">// 判断是否为空</span></span><br><span class="line">set.size();                   <span class="comment">// 返回元素个数</span></span><br><span class="line">set.contains(<span class="string">&quot;data&quot;</span>);         <span class="comment">// 判定是否含有元素</span></span><br></pre></td></tr></table></figure>
+
+<p><em>HashSet 类无序，因此不支持 get 方法：获取对象必须要通过 Iterator 来遍历。</em></p>
+<h3 id="Collections-类"><a href="#Collections-类" class="headerlink" title="Collections 类"></a>Collections 类</h3><p>Collections 类是针对集合类的一个帮助类，他提供一系列静态方法实现各种集合操作。</p>
+<ol>
+<li>排序操作（主要针对List接口）  </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collections.swap(list, <span class="number">1</span>, <span class="number">2</span>);          <span class="comment">// 元素交换顺序</span></span><br><span class="line">Collections.shuffle(list);             <span class="comment">// 元素随机排序</span></span><br><span class="line">Collections.reverse(list);             <span class="comment">// 元素颠倒排序</span></span><br><span class="line">Collections.sort(list);                <span class="comment">// 元素按大小排序，可以自定义比较顺序</span></span><br><span class="line">Collections.rotate(list, <span class="number">2</span>);           <span class="comment">// 元素右移指定长度</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>查找和替换</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Collections.binarySearch(list, <span class="string">&quot;data&quot;</span>);              <span class="comment">// 二分查找元素索引，只适用于有序集合</span></span><br><span class="line">Collections.max(list);                               <span class="comment">// 返回最大元素，可以自定义比较顺序</span></span><br><span class="line">Collections.min(list);                               <span class="comment">// 返回最小元素，可以自定义比较顺序</span></span><br><span class="line">Collections.frequency(list, <span class="string">&quot;data&quot;</span>);                 <span class="comment">// 返回对象出现次数</span></span><br><span class="line"></span><br><span class="line">Collections.fill(list, <span class="string">&quot;data&quot;</span>);                      <span class="comment">// 使用指定元素填充</span></span><br><span class="line">Collections.replaceAll(list, <span class="string">&quot;old&quot;</span>, <span class="string">&quot;new&quot;</span>);          <span class="comment">// 使用指定元素替换</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>上锁（主要针对List接口）  </li>
+</ol>
+<p>调用 Collections 类中的 synchronizedList 方法，可以将 List 接口转换成线程安全的容器使用。</p>
+<p>List 接口中的方法都会被添加 synchronized 锁（效率不高）。但是 iterator 方法没有加锁，如果要遍历还需要在外层加锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="variable">list</span> <span class="operator">=</span> Collections.synchronizedList(<span class="keyword">new</span> <span class="title class_">ArrayList</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (list) &#123;</span><br><span class="line">    <span class="type">Iterator</span> <span class="variable">i</span> <span class="operator">=</span> list.iterator(); </span><br><span class="line">    <span class="keyword">while</span> (i.hasNext())</span><br><span class="line">        foo(i.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Map-接口"><a href="#Map-接口" class="headerlink" title="Map 接口"></a>Map 接口</h3><p>【图】组织存储 key-value 的数据元素组合：内部实际存储的是 <code>Map.Entry&lt;K, V&gt;</code> 静态内部类。</p>
+<p>Entry 类可以通过 getKey、getValue、setKey、setValue 方法调整数据。</p>
+<h4 id="Map-接口方法"><a href="#Map-接口方法" class="headerlink" title="Map 接口方法"></a>Map 接口方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">map.put(<span class="string">&quot;key_1&quot;</span>,<span class="number">1</span>);               <span class="comment">// 添加键值对,已有 key 则覆盖 value</span></span><br><span class="line">map.putIfAbsent(<span class="string">&quot;key_2&quot;</span>,<span class="number">2</span>);       <span class="comment">// 添加键值对,已有 key 则不操作</span></span><br><span class="line"></span><br><span class="line">map.remove(<span class="string">&quot;key_1&quot;</span>);              <span class="comment">// 删除键值对（按值）           </span></span><br><span class="line">map.remove(<span class="string">&quot;key_2&quot;</span>,<span class="number">2</span>);            <span class="comment">// 删除键值对（按键值）</span></span><br><span class="line"></span><br><span class="line">map.get(<span class="string">&quot;key_1&quot;</span>);                 <span class="comment">// 获取值, key 不存在返回null</span></span><br><span class="line">map.getOrDefault(<span class="string">&quot;key_2&quot;</span>,-<span class="number">1</span>);     <span class="comment">// 获取值, key 不存在返回默认值</span></span><br><span class="line"></span><br><span class="line">map.containsKey(<span class="string">&quot;key_1&quot;</span>);       <span class="comment">// 判断 key 是否存在  </span></span><br><span class="line">map.containsValue(<span class="number">1</span>);             <span class="comment">// 判断 value 是否存在      </span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="线性存储"><a href="#线性存储" class="headerlink" title="线性存储"></a>线性存储</h2><h3 id="ArrayList-类"><a href="#ArrayList-类" class="headerlink" title="ArrayList 类"></a>ArrayList 类</h3><p>【数组序列】实现了 List 接口，内部使用 Object 数组存储：</p>
+<ol>
+<li>可以高效地按索引进行元素修改和查询。</li>
+<li>添加元素时动态扩容：当容量满后，ArrayList 类会新建一个 1.5 倍容量的新数组，然后将当前数组数据全部复制过去。</li>
+</ol>
+<p><strong>ArrayList 构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();              <span class="comment">// 默认初始容量为 10</span></span><br><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(<span class="number">100</span>);           <span class="comment">// 自定义初始容量</span></span><br><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(queue);         <span class="comment">// 构造时直接复制其他容器元素（可以是任何 Collection 类）</span></span><br><span class="line"></span><br><span class="line"><span class="type">List</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();                         <span class="comment">// 未指定元素类型则为 Object 类</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="LinkedList-类"><a href="#LinkedList-类" class="headerlink" title="LinkedList 类"></a>LinkedList 类</h3><p>【链表序列】实现了 List 和 Deque 接口。内部使用双向链表存储：</p>
+<ol>
+<li>可以高效地进行元素插入和删除。</li>
+<li>容量无限。</li>
+</ol>
+<p><strong>LinkedList 构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();              <span class="comment">// 创建空对象</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;(queue);         <span class="comment">// 复制其他容器元素</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="ArrayDeque-类"><a href="#ArrayDeque-类" class="headerlink" title="ArrayDeque 类"></a>ArrayDeque 类</h3><p>【数组双端队列】实现了 Deque 接口。内部使用 Object 数组存储（不允许存储 null 值）：</p>
+<ol>
+<li>可以高效进行元素查找和尾部插入取出，是用作队列、双端队列、栈甚至递归树的绝佳选择。</li>
+<li>添加元素时动态扩容：当容量满后，ArrayDeque 类会新建一个 1.5 倍容量的新数组，然后将当前数组数据全部复制过去。</li>
+</ol>
+<p><strong>ArrayDeque 构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ArrayDeque&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();              <span class="comment">// 创建空对象</span></span><br><span class="line">ArrayDeque&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;(list);          <span class="comment">// 复制其他容器元素</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PriorityQueue-类"><a href="#PriorityQueue-类" class="headerlink" title="PriorityQueue 类"></a>PriorityQueue 类</h3><p>【无界优先级队列】实现了 Queue 接口。内部使用 Object 数组存储（不允许存储 null 值）：</p>
+<ol>
+<li><strong>PriorityQueue 类内会自动对元素进行排序</strong>，是作为堆的绝佳选择。但实际在数组中并不是有序存储，而只保证队首元素是最小值：每次弹出队首元素后会自动查找剩余队列中的最小元素放到队首。</li>
+<li>添加元素时动态扩容：当容量满后，PriorityQueue 类会新建一个 1.5 倍容量的新数组，然后将当前数组数据全部复制过去。</li>
+</ol>
+<p><strong>PriorityQueue 构造方法</strong></p>
+<p>开发者在构造队列时可通过重写 compare 方法自定义排序规则。如果存储未重写 compareTo 方法的自定义对象，则必须重写 compare 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认排序方法</span></span><br><span class="line">PriorityQueue&lt;Integer&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义排序方法(Lambda 表达式)</span></span><br><span class="line">PriorityQueue&lt;Student&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;Student&gt;((s1, s2) -&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span>(s1.getScore() == s2.getScore())&#123;</span><br><span class="line">        <span class="keyword">return</span> s1.getName().compareTo(s2.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s1.getScore() - s2.getScore();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="哈希存储"><a href="#哈希存储" class="headerlink" title="哈希存储"></a>哈希存储</h2><h3 id="HashMap-类"><a href="#HashMap-类" class="headerlink" title="HashMap 类"></a>HashMap 类</h3><p>【哈希表】 实现 Map 接口。底层使用散列存储：构造一个 Entry 数组，根据 key 的 hash 值将 Entry 存入指定位置。</p>
+<ul>
+<li>key 值无序且不可重复，且允许 null 作为 key 值存在。</li>
+<li>发生哈希冲突时，HashMap 采用链表保存多个元素。当链表长度大于 8 时，链表自动转化为红黑树。</li>
+<li>达到负载因数后，HashMap 将调用 resize 方法动态扩容：新建一个 2 倍容量的新数组复制当前数组的数据。</li>
+</ul>
+<p><strong>HashMap 构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();                       <span class="comment">// 默认初始容量 16 负载因数 0.75</span></span><br><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">32</span>);                     <span class="comment">// 自定义初始容量</span></span><br><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">32</span>, <span class="number">0.5f</span>);               <span class="comment">// 自定义初始容量和负载因数</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="LinkedHashMap-类"><a href="#LinkedHashMap-类" class="headerlink" title="LinkedHashMap 类"></a>LinkedHashMap 类</h3><p>【链式哈希表】继承 HashMap 类。</p>
+<ol>
+<li>底层使用散列存储：构造一个 Entry 数组，根据 key 的 hash 值将 Entry 存入指定位置。</li>
+<li>Entry 额外添加了引用 before &amp; after ，使哈希表内的所有 Entry 构成一个双向链表维护 Entry 的顺序。</li>
+</ol>
+<p><strong>LinkedHashMap 构造方法</strong></p>
+<p>在默认情况下 Entry 按照插入顺序排序，可指定创建时的初始容量和负载因数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;();                  <span class="comment">// 默认初始容量 16 负载因数 0.75 </span></span><br><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;(<span class="number">32</span>);                <span class="comment">// 自定义初始容量</span></span><br><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;(<span class="number">32</span>, <span class="number">0.5f</span>);          <span class="comment">// 自定义初始容量和负载因数</span></span><br></pre></td></tr></table></figure>
+
+<p>Entry 也可以按照访问顺序排序：对 Entry 进行操作时会先删除再插入，将 Entry 移动到双向链表的表尾。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;(<span class="number">32</span>，<span class="number">0.5f</span>, <span class="literal">true</span>);    <span class="comment">// 基于访问顺序排序</span></span><br></pre></td></tr></table></figure>
+
+<p>LinkedHashMap 类提供了 removeEldestEntry 方法，在使用 put 操作插入 Entry 时将自动调用此方法决定是否移除双向链表表头的 Entry：默认返回 false ，可通过重写此方法以实现 LRU 算法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Entry 超过容量后自动删除最久未使用的 Entry</span></span><br><span class="line">Map&lt;String,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;(capacity, <span class="number">0.5f</span>, <span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">boolean</span> <span class="title function_">removeEldestEntry</span><span class="params">(Map.Entry eldest)</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> size() &gt; capacity;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="TreeMap-类"><a href="#TreeMap-类" class="headerlink" title="TreeMap 类"></a>TreeMap 类</h3><p>【树表】 实现了 Map 接口。底层使用红黑树存储：Entry 按照 key 值大小插入红黑树，并动态调整红黑树高度。</p>
+<p><strong>TreeMap 类方法</strong></p>
+<p>TreeMap 类提供了以下专属方法使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">map.firstKey();                   <span class="comment">// 返回最小 key</span></span><br><span class="line">map.lastKey();                    <span class="comment">// 返回最大 key</span></span><br><span class="line"></span><br><span class="line">map.ceilingKey(<span class="string">&quot;10&quot;</span>);             <span class="comment">// 返回大于等于10的最小 Key，不存在则返回 null</span></span><br><span class="line">map.ceilingEntry(<span class="string">&quot;10&quot;</span>);           <span class="comment">// 返回大于等于10的最小 Key 的键值对(getKey / getValue 方法)</span></span><br><span class="line"></span><br><span class="line">map.floorKey(<span class="string">&quot;10&quot;</span>);               <span class="comment">// 返回小于等于10的最大 Key，不存在则返回 null</span></span><br><span class="line">map.floorEntry(<span class="string">&quot;10&quot;</span>);             <span class="comment">// 返回小于等于10的最大 Key 的键值对</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-子类"><a href="#Set-子类" class="headerlink" title="Set 子类"></a>Set 子类</h3><ul>
+<li><strong>HashSet 类</strong>：【散列集】基于 HashMap 类实现。</li>
+<li><strong>LinkedHashSet 类</strong>：【链式散列集】基于 LinkedHashMap 类实现。</li>
+<li><strong>TreeSet 类</strong>：【树集】基于 TreeMap 类实现。</li>
+</ul>
+<hr>
+<h2 id="元素遍历"><a href="#元素遍历" class="headerlink" title="元素遍历"></a>元素遍历</h2><h3 id="遍历容器"><a href="#遍历容器" class="headerlink" title="遍历容器"></a>遍历容器</h3><h4 id="Iterable-接口"><a href="#Iterable-接口" class="headerlink" title="Iterable 接口"></a>Iterable 接口</h4><p>是集合框架的顶级接口，被所有容器类都实现。</p>
+<ol>
+<li><p>提供 iterator 方法，用来创建一个实现了 Iterator 接口的 iterator 对象：按容器类规定的顺序实现遍历集合。</p>
+</li>
+<li><p>JDK 1.8 引入 foreach 方法遍历集合。效率更高，但不能对元素进行删除操作，否则会抛出异常。</p>
+</li>
+</ol>
+<h4 id="Iterator-接口"><a href="#Iterator-接口" class="headerlink" title="Iterator 接口"></a>Iterator 接口</h4><p>提供了 hasNext、next、remove 三个方法，可以按容器类规定的顺序实现遍历集合。</p>
+<h3 id="遍历顺序"><a href="#遍历顺序" class="headerlink" title="遍历顺序"></a>遍历顺序</h3><h4 id="List-Queue-接口"><a href="#List-Queue-接口" class="headerlink" title="List / Queue 接口"></a>List / Queue 接口</h4><ul>
+<li><strong>全部方法</strong>：按数组或链表顺序输出。</li>
+</ul>
+<h4 id="Map-Set-接口"><a href="#Map-Set-接口" class="headerlink" title="Map / Set 接口"></a>Map / Set 接口</h4><ul>
+<li><strong>HashSet/HashMap 类</strong>：在返回数据时没有特别的顺序。</li>
+<li><strong>LinkedHashSet/LinkedHashMap 类</strong>：默认按插入顺序返回数据，也可以按访问顺序返回。</li>
+<li><strong>TreeSet/TreeMap 类</strong>：在返回数据时按 key 值从小到大排列，即按照树的中序遍历返回。</li>
+</ul>
+<h3 id="遍历方法"><a href="#遍历方法" class="headerlink" title="遍历方法"></a>遍历方法</h3><h4 id="Collection-接口-1"><a href="#Collection-接口-1" class="headerlink" title="Collection 接口"></a>Collection 接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// iterator 遍历</span></span><br><span class="line">Iterator&lt;Integer&gt; iter = list.iterator();</span><br><span class="line"><span class="keyword">while</span>(iter.hasNext())&#123;              </span><br><span class="line">      <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> iter.next();</span><br><span class="line">      <span class="keyword">if</span>(num &lt; <span class="number">0</span>) iter.remove();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 随机遍历（效率更高，但不能进行删除操作）</span></span><br><span class="line"><span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">      System.out.println(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Map-接口-1"><a href="#Map-接口-1" class="headerlink" title="Map 接口"></a>Map 接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,String&gt; map=<span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String,String&gt;();</span><br><span class="line">		</span><br><span class="line"><span class="comment">// iterator 遍历</span></span><br><span class="line">Iterator&lt;Map.Entry&lt;String, String&gt;&gt; iter = map.entrySet().iterator(); </span><br><span class="line"><span class="keyword">while</span> (iter.hasNext()) &#123; </span><br><span class="line">	Map.Entry&lt;String, String&gt; entry = iter.next(); </span><br><span class="line">	System.out.println(entry.getKey() + entry.getValue()); </span><br><span class="line">&#125; </span><br><span class="line">		</span><br><span class="line"><span class="comment">// 随机遍历（效率更高，但不能进行删除操作）</span></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : map.entrySet()) &#123; </span><br><span class="line">	System.out.println(entry.getKey() + entry.getValue()); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 只遍历 key</span></span><br><span class="line"><span class="keyword">for</span> (String key : map.keySet()) &#123; </span><br><span class="line">	System.out.println(key + map.get(key)); </span><br><span class="line">&#125; </span><br><span class="line">		</span><br><span class="line"><span class="comment">// 只遍历 value</span></span><br><span class="line"><span class="keyword">for</span> (String value : map.values()) &#123; </span><br><span class="line">	System.out.println(value); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="遍历失败"><a href="#遍历失败" class="headerlink" title="遍历失败"></a>遍历失败</h3><p>在迭代元素的时候不能通过集合的方法修改或删除元素，但可以通过迭代器的 remove 方法删除元素。</p>
+<ul>
+<li><p>java.util 包下面的所有的集合类都是快速失败的。直接对原容器进行修改，会抛出 ConcurrentModificationException 异常。</p>
+</li>
+<li><p>java.util.concurrent 包下面的所有的集合类都是安全失败的。遍历时先对底层集合做拷贝再遍历，因此不会抛出异常。</p>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/javase/%E5%AE%B9%E5%99%A8/%E5%9F%BA%E7%A1%80%E5%AE%B9%E5%99%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javase/" rel="tag">javase</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/javase/%E5%B9%B6%E5%8F%91/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            线程池
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/javase/%E5%AE%B9%E5%99%A8/%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">并发容器</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

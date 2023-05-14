@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Spring AOP |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-javaee/spring/SpringAOP"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Spring AOP
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/javaee/spring/SpringAOP/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javaee/">javaee</a> / <a class="article-category-link" href="/categories/javaee/Spring/">Spring</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/joy99/p/10941543.html">https://www.cnblogs.com/joy99/p/10941543.html</a></p>
+<p>超级详细版：<a target="_blank" rel="noopener" href="http://shouce.jb51.net/spring/aop.html">http://shouce.jb51.net/spring/aop.html</a></p>
+<hr>
+<h2 id="AOP-原理"><a href="#AOP-原理" class="headerlink" title="AOP 原理"></a>AOP 原理</h2><h3 id="面向切面"><a href="#面向切面" class="headerlink" title="面向切面"></a>面向切面</h3><p>( Aspect Orient Programming ) 面向切面编程，是面向对象编程(OOP) 的一种补充。</p>
+<p>在 Java 程序自上而下处理主业务时，也会经常处理一些和主业务逻辑无关的问题（比如在接收用户访问请求时，计算程序响应该请求的运行时间）。这些代码如果和主逻辑代码混淆，会导致后期难以维护。</p>
+<p>AOP 就是将这些横切性问题和主逻辑解耦。保证开发者不修改主逻辑代码的前提下，能为系统中的业务组件添加删除、或复用某种功能。</p>
+<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h3><p>AOP 的本质是修改业务组件实际执行方法的源代码。即代理类 A 封装了目标类 B ，外部调用 B 的目标方法时会被代理类 A 拦截，代理类 A 一方面执行切面逻辑，一方面把调用转发给目标类 B ，执行目标方法。</p>
+<p>该过程是代理模式的实现，代理方式有以下两种：</p>
+<ul>
+<li><strong>静态 AOP</strong> ：在编译阶段对程序源代码进行修改，生成静态的 AOP 代理类（字节码文件已被修改）。性能更好。</li>
+<li><strong>动态 AOP</strong> ：在运行阶段动态生成代理对象。灵活性更好。</li>
+</ul>
+<h4 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h4><p>Spring 中的 AOP 是通过动态代理实现的，有以下两种方式：</p>
+<ul>
+<li><strong>JDK 动态代理</strong></li>
+</ul>
+<p>利用反射机制生成一个实现代理接口的类，在调用具体方法前调用 InvokeHandler 来处理。</p>
+<p>JDK 代理只能对实现接口的类生成代理。代理生成的是一个接口对象，因此代理类必须实现了接口，否则会抛出异常。</p>
+<ul>
+<li><strong>CGlib 动态代理</strong></li>
+</ul>
+<p>直接操作字节码对代理对象类的字节码文件加载并修改，生成子类来处理。</p>
+<p>CGlib 代理针对类实现代理，对指定的类生成一个子类并覆盖其中的方法，因此不能代理 final 类。</p>
+<hr>
+<h2 id="AOP-注解详解"><a href="#AOP-注解详解" class="headerlink" title="AOP 注解详解"></a>AOP 注解详解</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>对负责扫描组件的配置文件类(@Configuration) 添加 <code>@EnableAspectJAutoProxy</code> 注解，启用 AOP 功能。</p>
+<p><strong>默认通过 JDK 动态代理方式进行织入。</strong>但必须代理一个实现接口的类，否则会抛出异常。</p>
+<p>注解改为 <code>@EnableAspectJAutoProxy(proxyTargetClass = true)</code>：</p>
+<p>通过 cglib 的动态代理方式进行织入。但如果拓展类的方法被 final 修饰，则织入无效。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan(basePackageClasses = &#123;com.company.project.service.Meal.class&#125;)</span></span><br><span class="line"><span class="meta">@EnableAspectJAutoProxy(proxyTargetClass = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppConfig</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="切面"><a href="#切面" class="headerlink" title="切面"></a>切面</h3><p>对组件类(@component) 添加 <code>@Aspect</code> 注解，表示该类为切面类。</p>
+<h4 id="增强类型"><a href="#增强类型" class="headerlink" title="增强类型"></a>增强类型</h4><p><strong>前置通知</strong></p>
+<p>切面方法注解 <code>@Before</code> 表示目标方法调用前，执行该切面方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Before(&quot;execution(* com.company.project.service.Meal.eat(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">cook</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;cook&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>后置通知</strong></p>
+<ul>
+<li>切面方法注解 <code>@After</code> 表示目标方法返回或抛出异常后，执行该切面方法。</li>
+<li>切面方法注解 <code>@AfterReturning</code> 只在目标方法返回后，执行该切面方法。</li>
+<li>切面方法注解 <code>@AfterThrowing</code> 只在目标方法抛出异常后，执行该切面方法。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@AfterReturning(&quot;execution(* com.company.project.service.Meal.eat(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;clean&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>环绕通知</strong></p>
+<p>切面方法注解 <code>@Around</code> 表示切面方法执行过程中，执行目标方法。</p>
+<p>传入参数为 ProceedingJoinPoint 类对象，表示目标方法。在切面方法中调用其 proceed 方法来执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Around(&quot;execution(* com.company.project.service.Meal.eat(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">party</span><span class="params">(ProceedingJoinPoint pj)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;cook&quot;</span>);</span><br><span class="line">        pj.proceed();</span><br><span class="line">        System.out.println(<span class="string">&quot;clean&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">        throwable.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="切点声明"><a href="#切点声明" class="headerlink" title="切点声明"></a>切点声明</h4><p>在切面方法中需要声明切面方法要切入的目标方法，execution 指示器是我们定义切点时最主要使用的指示器。</p>
+<p>格式为： <code>execution(返回数据类型 路径.类.方法(传入参数类型))</code></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>execution(* com.company.project.service.Meal.eat(..))</code></td>
+<td>执行 Meal 类的 eat 方法时切入</td>
+</tr>
+<tr>
+<td><code>execution(* com.company.project.service.Meal.eat(int,String))</code></td>
+<td>执行 Meal 类的 eat(int,String) 方法时切入</td>
+</tr>
+<tr>
+<td><code>execution(* com.company.project.service.Meal.*(..))</code></td>
+<td>执行 Meal 类的所有方法时切入</td>
+</tr>
+<tr>
+<td><code>execution(* com.company.project.service.*.*(..))</code></td>
+<td>执行 service 包内的任意方法时切入（不包含子包）</td>
+</tr>
+<tr>
+<td><code>execution(* com.company.project.service..*.*(..))</code></td>
+<td>执行 service 包内的任意方法时切入（包含子包）</td>
+</tr>
+<tr>
+<td><code>execution(public * *(..))</code></td>
+<td>执行所有目标类的所有 public 方法时切入</td>
+</tr>
+<tr>
+<td><code>execution(* pre*(...))</code></td>
+<td>执行所有目标类所有以 pre 为前缀的方法时切入</td>
+</tr>
+</tbody></table>
+<p>还有一些其他指示器：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>within(com.company.project.service.*)</code></td>
+<td>执行 service 包内的任意方法时切入</td>
+</tr>
+<tr>
+<td><code>this(com.company.project.service.AccountService)</code></td>
+<td>执行实现 AccountService 接口的代理对象的任意方法时切入</td>
+</tr>
+<tr>
+<td><code>target(com.company.project.service.AccountService)</code></td>
+<td>执行实现 AccountService 接口的目标对象的任意方法时切入</td>
+</tr>
+<tr>
+<td><code>args(java.io.Serializable)</code></td>
+<td>任何一个只接受一个参数，并且运行时所传入的参数是 Serializable 接口的方法</td>
+</tr>
+</tbody></table>
+<ul>
+<li>多个匹配条件之间使用链接符连接： <code>&amp;&amp;</code>、<code>||</code>、<code>!</code> 。</li>
+<li>within 指示器表示可以选择的包，bean 指示器可以在切点中选择 bean 。</li>
+</ul>
+<p>如参数 <code>execution(String com.company.project.service.test1.IBuy.buy(double)) &amp;&amp; args(price) &amp;&amp; bean(girl)</code> </p>
+<p>要求返回类型为 String ；参数类型为 double ；参数名为 price ；调用目标方法的 bean 名称为 girl 。</p>
+<p><strong>简化代码</strong></p>
+<p>对于类中要频繁要切入的目标方法，我们可以使用 <code>@Pointcut</code> 注解声明切点表达式，简化代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EatPlus</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut(&quot;execution(* com.company.project.service.Meal.eat(..))&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">point</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before(&quot;point()&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">cook</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;cook&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(&quot;point()&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">party</span><span class="params">(ProceedingJoinPoint pj)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;cook&quot;</span>);</span><br><span class="line">            pj.proceed();</span><br><span class="line">            System.out.println(<span class="string">&quot;clean&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">            throwable.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut(&quot;execution(String com.company.project.service.Meal.eat(double)) &amp;&amp; args(price) &amp;&amp; bean(people)&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">point2</span><span class="params">(<span class="type">double</span> price)</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(&quot;point2(price)&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">pay</span><span class="params">(ProceedingJoinPoint pj, <span class="type">double</span> price)</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            pj.proceed();</span><br><span class="line">            <span class="keyword">if</span> (price &gt; <span class="number">100</span>) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;can not afford&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&quot;没有购买&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">            throwable.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;购买&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<h2 id="常用-AOP"><a href="#常用-AOP" class="headerlink" title="常用 AOP"></a>常用 AOP</h2><h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><ul>
+<li><p><code>@ControllerAdvice</code> / <code>@RestControllerAdvice</code>: 标注当前类为所有 Controller 类服务</p>
+</li>
+<li><p><code>@ExceptionHandler</code>: 标注当前方法处理异常（默认处理 RuntimeException）<br><code>@ExceptionHandler(value = Exception.class)</code>: 处理所有异常</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ControllerExceptionHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(Throwable.class)</span></span><br><span class="line">    <span class="keyword">public</span> ResultBean <span class="title function_">handleOtherException</span><span class="params">(Throwable e)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> String.format(<span class="string">&quot;错误=%s,位置=%s&quot;</span>, e.toString(), e.getStackTrace()[<span class="number">0</span>].toString());</span><br><span class="line">        <span class="keyword">return</span> ResultBean.error(ErrorCode.UNKNOWN_ERROR.getErrorCode(), message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(StreamPlatformException.class)</span></span><br><span class="line">    <span class="keyword">public</span> ResultBean <span class="title function_">handleVenusException</span><span class="params">(StreamPlatformException e)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ResultBean.error(e.getErrorCode(), e.getMessageToUser());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(FormValidationException.class)</span></span><br><span class="line">    <span class="keyword">public</span> ResultBean <span class="title function_">handleFormValidationException</span><span class="params">(FormValidationException e)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        e.getResult().getAllErrors().forEach(objectError -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (objectError <span class="keyword">instanceof</span> FieldError) &#123;</span><br><span class="line">                <span class="type">FieldError</span> <span class="variable">fieldError</span> <span class="operator">=</span> (FieldError) objectError;</span><br><span class="line">                message.append(<span class="string">&quot;参数&quot;</span>).append(fieldError.getField())</span><br><span class="line">                        .append(<span class="string">&quot;错误值为&quot;</span>).append(fieldError.getRejectedValue())</span><br><span class="line">                        .append(fieldError.getDefaultMessage());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                message.append(objectError.getDefaultMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> ResultBean.error(ErrorCode.PARAMETER_VALIDATION_ERROR.getErrorCode(),</span><br><span class="line">                String.format(ErrorCode.PARAMETER_VALIDATION_ERROR.getMessage(), message));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><ul>
+<li><strong>拦截器(Interceptor)</strong></li>
+</ul>
+<p>Java Web 中，在执行 Controller 方法前后对 Controller 请求进行拦截和处理。依赖于 web 框架，在 Spring 配置。在实现上基于 Java 的反射机制。</p>
+<ul>
+<li><strong>过滤器(Filter)</strong></li>
+</ul>
+<p>Java Web 中，在 request/response 传入 Servlet 前，过滤信息或设置参数。依赖于 servlet 容器，在 web.xml 配置。在实现上基于函数回调。</p>
+<blockquote>
+<p>两者常用于修改字符编码、删除无用参数、登录校验等。Spring 框架中优先使用拦截器：功能接近、使用更加灵活。</p>
+</blockquote>
+<p>拦截器配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在配置中引入拦截器对象（单独编写拦截器类）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">    <span class="comment">// 导入拦截器对象，默认拦截全部</span></span><br><span class="line">    <span class="type">InterceptorRegistration</span> <span class="variable">addInterceptor</span> <span class="operator">=</span> registry.addInterceptor(<span class="keyword">new</span> <span class="title class_">myInterceptor</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 排除配置</span></span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/error&quot;</span>,<span class="string">&quot;/login&quot;</span>,<span class="string">&quot;/user/login&quot;</span>);               </span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/asserts/**&quot;</span>);                       </span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/webjars/**&quot;</span>);</span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/public/**&quot;</span>);</span><br><span class="line">    <span class="comment">// 拦截配置</span></span><br><span class="line">    addInterceptor.addPathPatterns(<span class="string">&quot;/**&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拦截器类通过实现 HandlerInterceptor 接口或者继承 HandlerInterceptorAdapter 类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义拦截器</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">myInterceptor</span> <span class="keyword">extends</span> <span class="title class_">HandlerInterceptorAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Session key</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">SESSION_KEY</span> <span class="operator">=</span> <span class="string">&quot;user&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// preHandle 预处理</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 检查 session</span></span><br><span class="line">        <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> request.getSession();</span><br><span class="line">        <span class="keyword">if</span> (session.getAttribute(SESSION_KEY) != <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// 重定向到登录页面</span></span><br><span class="line">        request.setAttribute(<span class="string">&quot;message&quot;</span>,<span class="string">&quot;登录失败，请先输入用户名和密码。&quot;</span>);</span><br><span class="line">        request.getRequestDispatcher(<span class="string">&quot;login&quot;</span>).forward(request,response);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// postHandle 善后处理</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler,</span></span><br><span class="line"><span class="params">                           ModelAndView modelAndView)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;INTERCEPTOR POSTHANDLE CALLED&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过滤器类通过继承 Filter 类实现，直接添加注解即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>                                                                <span class="comment">// 作为组件，交给容器处理</span></span><br><span class="line"><span class="meta">@ServletComponentScan</span>                                                     <span class="comment">// 扫描组件</span></span><br><span class="line"><span class="meta">@WebFilter(urlPatterns = &quot;/login/*&quot;,filterName = &quot;loginFilter&quot;)</span>           <span class="comment">// 设定过滤路径和名称</span></span><br><span class="line"><span class="meta">@Order(1)</span>                                                                 <span class="comment">// 设定优先级（值小会优先执行）</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        <span class="comment">// 过滤器前执行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;before&quot;</span>);</span><br><span class="line">        <span class="comment">// 执行内部逻辑</span></span><br><span class="line">        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">        <span class="comment">// 过滤器后执行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;after&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>调用顺序</strong></p>
+<p><img src="filter.png" alt="filter"></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/javaee/spring/SpringAOP/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javaee/" rel="tag">javaee</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/javaee/spring/Spring/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Spring
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/javaee/spring/SpringBootMybatis/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Spring Boot</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

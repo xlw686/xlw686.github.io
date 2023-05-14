@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>vue |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-其它/前端/vue"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  vue
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%89%8D%E7%AB%AF/vue/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a> / <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/%E5%B7%A5%E5%85%B7/">工具</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">27 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h1><hr>
+<h2 id="vue-概念"><a href="#vue-概念" class="headerlink" title="vue 概念"></a>vue 概念</h2><h3 id="前端框架"><a href="#前端框架" class="headerlink" title="前端框架"></a>前端框架</h3><p>前端开发进化过程： <strong>原生JS 》jQuery 等类库 》Vue 等前端框架</strong></p>
+<ul>
+<li>jQuery 等类库提供了已封装好的 JS 方法集合，用户在前端开发中可以直接调用（可以使用多个）。</li>
+<li>Vue 等前端框架提供了完整的项目解决方案，用户在前端开发中必须按照特定框架规范进行开发（只能选择一个）。</li>
+</ul>
+<p>目前主流的前端框架有 Vue 、 React 、 Angular 。</p>
+<h3 id="vue-特征"><a href="#vue-特征" class="headerlink" title="vue 特征"></a>vue 特征</h3><p>Vue 主要有以下两大特征：</p>
+<ol>
+<li>响应式数据绑定：数据发生改变，视图自动更新（开发者不再关注 dom 操作，进一步提高开发效率）。</li>
+<li>可组合视图组件：视图按照功能切分成基本单元（易维护，易重用，易测试）。</li>
+</ol>
+<h3 id="vue-使用"><a href="#vue-使用" class="headerlink" title="vue 使用"></a>vue 使用</h3><ul>
+<li><strong>引入外部文件(CDN)</strong></li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 开发环境版本，包含命令行警告 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/vue/dist/vue.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 生产环境版本，优化文件大小和响应速度 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/vue&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>命令行工具(CLI)</strong></li>
+</ul>
+<p>vue-cli 是基于 Node.js 的 vue 快捷开发工具，使用前首先要下载并安装 Node.js 开发环境。</p>
+<ol>
+<li>安装脚手架</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install @vue/cli -g          <span class="comment"># 全局安装安装 vue-cli 工具</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>@vue/cli</code> 适用于 vue 2.X ，<code>vue-cli</code> 适用于旧版本。</p>
+</blockquote>
+<ol start="2">
+<li>创建项目并使用</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式一</span></span><br><span class="line">$ vue create project-name          <span class="comment"># 直接创建项目</span></span><br><span class="line">$ npm run dev                      <span class="comment"># 开发环境启动项目（可配置）        </span></span><br><span class="line">$ npm run build                    <span class="comment"># 运行环境启动项目（可配置）     </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式二</span></span><br><span class="line">$ vue ui                           <span class="comment"># 开启图形化工具，用来创建和管理项目</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="vue-对象"><a href="#vue-对象" class="headerlink" title="vue 对象"></a>vue 对象</h2><p>vue 对象是管理 vue 的基本单元，开发者可以在 JS 代码中创建 vue 对象。</p>
+<p>在 vue 对象中，必须通过 <code>el</code> 指定 vue 对象作用域。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    var app = new Vue(&#123;</span><br><span class="line">      el: &#x27;#app&#x27;,</span><br><span class="line">      ...</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据显示"><a href="#数据显示" class="headerlink" title="数据显示"></a>数据显示</h3><p>在 vue 对象中，通过 <code>data</code> 存储 vue 对象中的数据。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 数据显示 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">v-text</span>=<span class="string">&quot;message&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>              <span class="comment">&lt;!-- v-text --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Word is &#123;&#123; message &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span>          <span class="comment">&lt;!-- 插值表达式：可以对内容进行扩展 --&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">v-html</span>=<span class="string">&quot;message&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>              <span class="comment">&lt;!-- v-html: 可以直接插入 html 元素 --&gt;</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- vue 对象 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 数据</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">message</span>: <span class="string">&#x27;Hello Vue&#x27;</span>,         <span class="comment">// 数据</span></span></span><br><span class="line"><span class="language-javascript">        <span class="attr">data</span>: []                      <span class="comment">// 数组数据</span></span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">    app.<span class="property">message</span>=<span class="string">&quot;GoodBye Vue.&quot;</span>;       <span class="comment">// vue 对象数据可以被 JS 代码更新</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><ul>
+<li>在 vue 对象中，通过 <code>methods</code> 定义 vue 对象中的方法。</li>
+<li>在 vue 对象中，通过 <code>computed</code> 定义计算属性，重复调用时会基于缓存直接返回之前的计算结果，提高效率。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 方法调用 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;quit&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span>       </span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;showLog(&#x27;Hello&#x27;)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span>        </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- vue 对象 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">message</span>: <span class="string">&#x27;&#x27;</span></span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 方法</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        quit () &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">this</span>.<span class="property">router</span>.<span class="title function_">go</span>(-<span class="number">1</span>)</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        showLog (message) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">this</span>.<span class="property">message</span> = message</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">log</span>(message)</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 计算属性</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      calc (data) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">num</span> + data</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>在 vue 对象中，通过 <code>created</code> 定义方法，会在创建 vue 对象时自动调用。在模板渲染成html前调用，即通常初始化某些属性值，然后再渲染成视图。</li>
+<li>在 vue 对象中，通过 <code>mounted</code> 定义方法，会在创建 vue 对象时自动调用。在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 计算结果 --&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Word is &#123;&#123; calc(50) &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span>     </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- vue 对象 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">num</span>: <span class="string">&#x27;&#x27;</span></span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 创建方法</span></span></span><br><span class="line"><span class="language-javascript">    created () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">num</span> = <span class="number">100</span></span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 计算属性</span></span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="数据监听"><a href="#数据监听" class="headerlink" title="数据监听"></a>数据监听</h3><p>在 vue 对象中，通过监听器 <code>watch</code> 可以在数据发生变化时触发指定的事件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">v-model</span>=<span class="string">&quot;name&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- vue 对象 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">name</span>: <span class="string">&#x27;MrJoker&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">num</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">a</span>: <span class="number">1</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">b</span>: <span class="number">2</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">c</span>: <span class="number">3</span></span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 监听器</span></span></span><br><span class="line"><span class="language-javascript">    <span class="attr">watch</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 监听一</span></span></span><br><span class="line"><span class="language-javascript">      name (newName, oldName) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">log</span>(oldName + <span class="string">&#x27;&gt;&gt;&#x27;</span> + newName)</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 监听二</span></span></span><br><span class="line"><span class="language-javascript">      <span class="attr">num</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="title function_">handler</span>(<span class="params">newNum, oldNum</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;num changed&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">immediate</span>: <span class="literal">true</span>,                      <span class="comment">// 创建数据时也会立即执行</span></span></span><br><span class="line"><span class="language-javascript">        <span class="attr">deep</span>: <span class="literal">true</span>                            <span class="comment">// 深度监听下属所有数据</span></span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 监听三</span></span></span><br><span class="line"><span class="language-javascript">      <span class="string">&#x27;num.a&#x27;</span>: &#123;      </span></span><br><span class="line"><span class="language-javascript">        <span class="title function_">handler</span>(<span class="params">newName, oldName</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;obj.a changed&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125; </span></span><br><span class="line"><span class="language-javascript">  &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数据过滤"><a href="#数据过滤" class="headerlink" title="数据过滤"></a>数据过滤</h3><p>在 vue 对象中，通过过滤器 <code>filter</code> 可以对要显示的数据进行修饰。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 使用过滤器 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;&#123;message | upper&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>                            <span class="comment">&lt;!-- 方式一 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-bind:id</span>=<span class="string">&quot;id | upper&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>                        <span class="comment">&lt;!-- 方式二 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-bind:id</span>=<span class="string">&quot;id | upper2(2,&#x27;hello&#x27;)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>            <span class="comment">&lt;!-- 使用过滤器并传递参数 --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- vue 对象 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> app = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">name</span>:<span class="string">&#x27;Vue&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">message</span>: <span class="string">&#x27;Hello Vue&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">data</span>: []</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 过滤器</span></span></span><br><span class="line"><span class="language-javascript">    <span class="attr">filter</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">upper</span>: <span class="keyword">function</span>(<span class="params">val</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> val.<span class="title function_">charAt</span>(<span class="number">0</span>).<span class="title function_">toUpperCase</span>() + val.<span class="title function_">slice</span>(<span class="number">1</span>)</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 全局过滤器 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="title class_">Vue</span>.<span class="title function_">filter</span>(<span class="string">&#x27;upper2&#x27;</span>, <span class="keyword">function</span>(<span class="params">val,arg1,arg2</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arg2);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> val.<span class="title function_">charAt</span>(arg1).<span class="title function_">toUpperCase</span>() + val.<span class="title function_">slice</span>(arg1 + <span class="number">1</span>);</span></span><br><span class="line"><span class="language-javascript">  &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="vue-基础"><a href="#vue-基础" class="headerlink" title="vue 基础"></a>vue 基础</h2><h3 id="指令绑定"><a href="#指令绑定" class="headerlink" title="指令绑定"></a>指令绑定</h3><ul>
+<li>vue 使用 <code>v-bind</code> 绑定属性，表示该属性内容从 vue-data 中加载。可以用 <code>:</code> 代替。</li>
+<li>vue 使用 <code>v-on</code> 绑定事件，表示该事件从 vue-methods 中加载。可以用 <code>@</code> 代替。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">button</span> <span class="attr">value</span>=<span class="string">&quot;按钮&quot;</span> <span class="attr">v-bind:title</span>=<span class="string">&quot;message&quot;</span> <span class="attr">v-on:click</span>=<span class="string">&quot;show&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- img 标签的 src 属性使用插值表达式绑定 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;url&#125;&#125;&quot;</span> &gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 判断是否使用 textColor 和 textSize 类 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span> <span class="attr">:class</span>=<span class="string">&quot;&#123;&#x27;textColor&#x27;:isColor, &#x27;textSize&#x27;:isSize&#125;&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>JS 默认属性均为字符串，但 vue 绑定属性能自动识别数据为数值、布尔型、数组或对象。</em></p>
+<p><strong>可绑定事件</strong></p>
+<p><code>@click</code> 点击事件</p>
+<p><strong>事件修饰符</strong></p>
+<p>当父级元素和子级元素被同一个事件触发指令时，会先执行子级元素的指令，再执行父级元素的指令。</p>
+<ul>
+<li><code>.prevent</code> 阻止事件默认行为（比如超链接点击跳转，表单点击提交）。</li>
+<li><code>.stop</code>  阻止冒泡调用，不再执行父级的指令。</li>
+<li><code>.capture</code> 捕获调用，先执行父级的指令再执行子级的指令。</li>
+<li><code>.self</code> 该指令只有元素本身被点击才执行，不会被子级的指令冒泡调用。</li>
+<li><code>.once</code> 事件只触发一次，被触发后该指令无效。</li>
+</ul>
+<h3 id="表单输入绑定"><a href="#表单输入绑定" class="headerlink" title="表单输入绑定"></a>表单输入绑定</h3><p>Vue 使用单向绑定机制：后台数据发生改变后，页面显示会自动同步；但如果页面中表单输入发生变化，后台数据不会发生更新。</p>
+<p>vue 使用 <code>v-model</code> 实现双向绑定。运用于表单输入元素，输入发生变化后台数据也会实时更新。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;age&quot;</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>表单域修饰符</strong></p>
+<ul>
+<li><code>number</code>  转化为数值</li>
+<li><code>trim</code>  去掉首尾空格</li>
+<li><code>lazy</code>  鼠标离开输入元素后才更新（验证用户名是否已被使用时常用）</li>
+</ul>
+<h3 id="条件渲染"><a href="#条件渲染" class="headerlink" title="条件渲染"></a>条件渲染</h3><p>对于 布尔数据</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>:<span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">existA</span>:<span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">existB</span>:<span class="literal">true</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">surface</span>:<span class="literal">true</span></span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">v-if</span>=<span class="string">&quot;existA&quot;</span>&gt;</span>你好，我是A<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">v-else-if</span>=<span class="string">&quot;existB&quot;</span>&gt;</span>你好，我是B<span class="tag">&lt;/<span class="name">p</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">v-else</span> <span class="attr">v-show</span>=<span class="string">&quot;surface&quot;</span>&gt;</span>不好意思，A和B都不在<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>v-if: boolean 数据判断是否绘制元素</li>
+<li>v-show: boolean 数据判断是否显示 / 隐藏元素</li>
+</ul>
+<h3 id="列表渲染"><a href="#列表渲染" class="headerlink" title="列表渲染"></a>列表渲染</h3><p>对于 数组数据</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> vm = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>:<span class="string">&#x27;#app&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">list</span>:[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>],</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">user</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">id</span>:<span class="number">1</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">name</span>:<span class="string">&#x27;王东浩&#x27;</span></span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">userList</span>:[</span></span><br><span class="line"><span class="language-javascript">        &#123;<span class="attr">id</span>:<span class="number">1</span>, <span class="attr">name</span>:<span class="string">&#x27;zs1&#x27;</span>&#125;,</span></span><br><span class="line"><span class="language-javascript">        &#123;<span class="attr">id</span>:<span class="number">2</span>, <span class="attr">name</span>:<span class="string">&#x27;zs2&#x27;</span>&#125;,</span></span><br><span class="line"><span class="language-javascript">        &#123;<span class="attr">id</span>:<span class="number">3</span>, <span class="attr">name</span>:<span class="string">&#x27;zs3&#x27;</span>&#125;</span></span><br><span class="line"><span class="language-javascript">      ]</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>v-for: 迭代显示列表(List)元素</p>
+<ul>
+<li>普通数组：<code>&lt;p v-for=&quot;(item,index) in list&quot;&gt;索引值是&#123;&#123;i&#125;&#125;，内容为&#123;&#123;item&#125;&#125;&lt;/p&gt;</code></li>
+<li>对象键值对：<code>&lt;p v-for=&quot;(val,key,index) in user&quot;&gt;键是&#123;&#123;key&#125;&#125;，内容为&#123;&#123;val&#125;&#125;&lt;/p&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>数组 (item,index) 第一个属性为内容；第二个属性为索引。<br>键值 (val,key,index) 第一个属性为内容；第二个属性为键名；第三个属性为索引。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--对象数组--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">tr</span> <span class="attr">:key</span>=<span class="string">&#x27;user.id&#x27;</span> <span class="attr">v-for</span>=<span class="string">&#x27;user in userList&#x27;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.id&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123;user.name&#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为方便管理元素，一般需要为每项绑定一个唯一的 key 属性：<br><code>&lt;p v-for=&quot;item in user&quot; :key=&quot;item.id&quot;&gt;用户的名字为&#123;&#123;item.name&#125;&#125;&lt;/p&gt;</code></p>
+<p>可以用于循环固定次数：<code>&lt;p v-for=&quot;count in 10&quot;&gt;这是第&#123;&#123;count&#125;&#125;次循环&lt;/p&gt;</code></p>
+<h3 id="数组数据更新操作-API"><a href="#数组数据更新操作-API" class="headerlink" title="数组数据更新操作(API)"></a>数组数据更新操作(API)</h3><ul>
+<li>push</li>
+<li>pop</li>
+</ul>
+<p>以上操作直接对原有数组进行修改，页面也会随数据变化实时更新。</p>
+<ul>
+<li>filter</li>
+</ul>
+<p>以上操作会产生新的数组，返回值需要重新赋值去更新页面。</p>
+<p><code>Vue.set(vm.list,1,&#39;new data&#39;)</code> 或者 <code>Vm.$set(vm.list,1,&#39;new data&#39;)</code> </p>
+<p>响应式修改数组元素</p>
+<hr>
+<h2 id="vue-组件"><a href="#vue-组件" class="headerlink" title="vue 组件"></a>vue 组件</h2><p>vue 前端框架的基本功能单元是组件，vue 对象本身也是一个组件（根组件）。</p>
+<h3 id="全局组件"><a href="#全局组件" class="headerlink" title="全局组件"></a>全局组件</h3><p><code>Vue.component</code> 用于声明全局组件（不推荐）。</p>
+<p>在 vue 中， <code>template</code> 表示组件模板，即组件要展示的内容。<strong>模板内只能含有一个根元素！</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Vue</span>.<span class="title function_">component</span>(<span class="string">&quot;greet-bar&quot;</span>,&#123;  </span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;</span></span><br><span class="line"><span class="string">    &lt;div&gt;</span></span><br><span class="line"><span class="string">      &lt;p&gt;大家好，我是&#123;&#123;name&#125;&#125;&lt;/p&gt;</span></span><br><span class="line"><span class="string">      &lt;button value=&quot;改名&quot; v-on:click=&quot;changeName&quot;&gt;&lt;/button&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  &#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">name</span>:<span class="string">&quot;王东浩&quot;</span>&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">methods</span>:&#123;</span><br><span class="line">    <span class="attr">changeName</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">name</span>=<span class="string">&quot;甘甜&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>全局注册的组件可以直接用在任何的 Vue 根实例 (new Vue) 的模板中。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">greet-bar</span>&gt;</span><span class="tag">&lt;/<span class="name">greet-bar</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">greet-bar</span>&gt;</span><span class="tag">&lt;/<span class="name">greet-bar</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>:<span class="string">&quot;#app&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>:&#123;&#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>html 文件元素名和属性名不区分大小写，因此不可采用驼峰形式。但在 vue 组件中可以作为驼峰形式识别，全局组件命名为 GreetBar 也能被读取。</p>
+</blockquote>
+<h3 id="局部组件"><a href="#局部组件" class="headerlink" title="局部组件"></a>局部组件</h3><p>为避免用户需要一次性加载过多组件，我们可以定义局部组件，只在指定的 vue 对象中使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> greetA = &#123;</span><br><span class="line">  <span class="attr">data</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">name</span>:<span class="string">&quot;王东浩&quot;</span>&#125;</span><br><span class="line">  ,</span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;&lt;p&gt;hello &#123;&#123;name&#125;&#125;&lt;/p&gt;&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> greetB = &#123;</span><br><span class="line">  <span class="attr">data</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">name</span>:<span class="string">&quot;陈伯言&quot;</span>&#125;</span><br><span class="line">  ,</span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;&lt;p&gt;hello &#123;&#123;name&#125;&#125;&lt;/p&gt;&#x27;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在 vue 中声明要调用的组件，就可以在组件内完成调用。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">greet-a</span>&gt;</span><span class="tag">&lt;/<span class="name">greet-a</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">greet-b</span>&gt;</span><span class="tag">&lt;/<span class="name">greet-b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>:<span class="string">&quot;#app&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>:&#123;&#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">components</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="string">&#x27;GreetA&#x27;</span>: <span class="title class_">GreetA</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="string">&#x27;GreetB&#x27;</span>: <span class="title class_">GreetB</span></span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// components: &#123; GreetA, GreetB &#125;,  </span></span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="vue-单文件组件-vue"><a href="#vue-单文件组件-vue" class="headerlink" title="vue 单文件组件(.vue)"></a>vue 单文件组件(.vue)</h3><p>在实际项目开发中，我们往往为每一个组件创建一个单独的文件来定义。之间的相互调用统一交由 router 管理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  模板内容 html</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  业务逻辑 export</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style&gt;</span><br><span class="line">  组件样式 css</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="组件交互"><a href="#组件交互" class="headerlink" title="组件交互"></a>组件交互</h2><h3 id="父组件向子组件传值"><a href="#父组件向子组件传值" class="headerlink" title="父组件向子组件传值"></a>父组件向子组件传值</h3><p>在 vue 中， <code>props</code> 是单向数据流，用于父组件向子组件传值。</p>
+<ol>
+<li>在父组件中定义数据</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">greet-bar</span> <span class="attr">:first-name</span>=<span class="string">&#x27;sname&#x27;</span> <span class="attr">last-name</span> = <span class="string">&#x27;赵四&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">greet-bar</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">el</span>:<span class="string">&quot;#app&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">data</span>:&#123;<span class="attr">sname</span>:<span class="string">&quot;尼古拉斯&quot;</span>&#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>子组件读取并显示</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Vue</span>.<span class="title function_">component</span>(<span class="string">&quot;greet-bar&quot;</span>,&#123;</span><br><span class="line">  <span class="attr">props</span>::[<span class="string">&#x27;first-name&#x27;</span>, <span class="string">&#x27;last-name&#x27;</span>],  <span class="comment">//也可以使用驼峰式接收 firstName</span></span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;</span></span><br><span class="line"><span class="string">    &lt;div&gt;</span></span><br><span class="line"><span class="string">      &lt;p&gt;大家好，我是&#123;&#123;first-name + &quot;·&quot; + last-name&#125;&#125;&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  &#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="子组件向父组件传值"><a href="#子组件向父组件传值" class="headerlink" title="子组件向父组件传值"></a>子组件向父组件传值</h3><ul>
+<li><strong>子组件定义事件</strong></li>
+</ul>
+<p>子组件通过触发 <code>$emit</code> 事件向父组件传值。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- $emit 须设定事件标记和传递数值 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&#x27;$emit(&quot;son-data&quot;, 0.1)&#x27;</span>&gt;</span>点击<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>父组件监听事件</strong></li>
+</ul>
+<p>父组件文件中放置的子组件，可以根据事件标记监听事件并调用指定的方法处理。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- $event 为传递数值 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">router-view</span> @<span class="attr">son-data</span>=<span class="string">&#x27;handle($event)&#x27;</span>&gt;</span> <span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 可不含，等同于 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">router-view</span> @<span class="attr">son-data</span>=<span class="string">&#x27;handle&#x27;</span>&gt;</span> <span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>父组件通过调用的方法，保存或使用子组件传来的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">handle</span>(<span class="params">data</span>)&#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">sonData</span> = data</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="非父子组件传值"><a href="#非父子组件传值" class="headerlink" title="非父子组件传值"></a>非父子组件传值</h3><p>必须创建一个 vue 对象作为事件中心居中协调，监听两个子组件事件并通过 props 传递给另一个子组件。</p>
+<h3 id="组件插槽"><a href="#组件插槽" class="headerlink" title="组件插槽"></a>组件插槽</h3><p>在组件的 template 中添加 <code>&lt;slot&gt;默认内容可选&lt;/slot&gt;</code></p>
+<p>可以自动读取 <code>&lt;greet-bar&gt;内容&lt;/greet-bar&gt;</code> 中的内容并展示。</p>
+<hr>
+<h2 id="vue-前后端交互"><a href="#vue-前后端交互" class="headerlink" title="vue 前后端交互"></a>vue 前后端交互</h2><p>传统的原生 JS 开发和 jQuery 都使用 ajax 实现前后端交互，存在以下两个问题：</p>
+<ol>
+<li>仍需要处理 dom 操作，操作复杂。</li>
+<li>交互为同步操作，可能导致一致性问题。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">  <span class="attr">url</span>:<span class="string">&#x27;http://localhost:8080&#x27;</span>,</span><br><span class="line">  <span class="attr">success</span>:<span class="attr">function</span>:(data)&#123;</span><br><span class="line">    ret = data;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ret);             <span class="comment">// 打印更新后的数据</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(ret);                 <span class="comment">// 打印数据，由于同步操作可能数据尚未更新</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="promise-对象"><a href="#promise-对象" class="headerlink" title="promise 对象"></a>promise 对象</h3><p>在 JavaScript 最新版本标准 ES6 中， 定义了 promise 对象获取异步操作的消息。</p>
+<ul>
+<li>resolve 函数： 将 promise 对象的状态标记为成功。</li>
+<li>reject 函数：将 promise 对象的状态标记为失败。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">queryData</span>(<span class="params">url</span>)&#123;</span><br><span class="line">  <span class="comment">// 创建 promise 对象</span></span><br><span class="line">  <span class="keyword">var</span> p = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">      <span class="keyword">if</span>(xhr.<span class="property">readyState</span> != <span class="number">4</span>) <span class="keyword">return</span>;</span><br><span class="line">      <span class="keyword">if</span>(xhr.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; xhr.<span class="property">status</span> ==<span class="number">200</span>)&#123;</span><br><span class="line">        <span class="comment">// 执行成功，执行 resolve</span></span><br><span class="line">        <span class="title function_">resolve</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 执行失败，执行 reject</span></span><br><span class="line">        <span class="title function_">reject</span>(<span class="string">&quot;服务器错误&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&#x27;get&#x27;</span>,url);</span><br><span class="line">    xhr.<span class="title function_">send</span>(<span class="literal">null</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>发送请求并获取处理结果</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080&#x27;</span>).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">  <span class="comment">// 成功执行前者，返回数据为 data</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">&#125;,<span class="keyword">function</span>(<span class="params">info</span>)&#123;</span><br><span class="line">  <span class="comment">// 失败执行后者，返回数据为 info (可不含)</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(info);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>p.then</code> 获取异步正常执行结果</li>
+<li><code>p.catch</code> 获取异常信息</li>
+<li><code>p.finally</code> 无论正确与否都会触发</li>
+</ul>
+<p><strong>请求嵌套</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行并通过 then 获取处理结果</span></span><br><span class="line"><span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080&#x27;</span>).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080/next1&#x27;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 执行第二次调用的返回数据</span></span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>单一的 Promise 链并不能发现 async/await 的优势，但是，如果需要处理由多个 Promise 组成的 then 链的时候，优势就能体现出来了（很有意思，Promise 通过 then 链来解决多层回调的问题，现在又用 async/await 来进一步优化它）。</p>
+<p><strong>批量处理</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p1 = <span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080/data1&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080/data2&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> p3 = <span class="title function_">queryData</span>(<span class="string">&#x27;http://localhost:8080/data3&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([p1,p2,p3]).<span class="title function_">then</span>(</span><br><span class="line">  <span class="comment">//所有任务都执行完才能返回结果</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">race</span>([p1,p2,p3]).<span class="title function_">then</span>(</span><br><span class="line">  <span class="comment">//最先完成者就能返回结果</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="axios-库"><a href="#axios-库" class="headerlink" title="axios 库"></a>axios 库</h3><p>axios 是基于 promise 实现的 http 客户端。作为第三方库，比官方的 fetch 功能更为强大。</p>
+<h4 id="引入-axios"><a href="#引入-axios" class="headerlink" title="引入 axios"></a>引入 axios</h4><ol>
+<li>直接引入</li>
+<li>在 vue ui 图形化工具中引入</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入 axios --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/axios/dist/axios.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--引入 qs , 一般用于处理提交数据--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.bootcss.com/qs/6.7.0/qs.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h4><p>一般在 main.js 文件中设定，可作用于全局。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="property">defaults</span>.<span class="property">timeout</span> = <span class="number">3000</span>;                       <span class="comment">// 超时时间</span></span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">baseURL</span> = <span class="string">&quot;http://localhost:8080&quot;</span>     <span class="comment">// 默认地址</span></span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">headers</span>[<span class="string">&#x27;mytoken&#x27;</span>] = <span class="string">&#x27;asaffdf123&#x27;</span>     <span class="comment">// 请求头</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="请求响应"><a href="#请求响应" class="headerlink" title="请求响应"></a>请求响应</h4><ol>
+<li><strong>GET / DELETE 请求</strong>：输入 URL 和 params 参数，参数附着在 URL 上。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">get</span>(<span class="string">&#x27;/get&#x27;</span>,&#123;</span><br><span class="line">  <span class="attr">params</span>:&#123;</span><br><span class="line">    <span class="attr">id</span>:<span class="number">123</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">ret</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(ret.<span class="property">data</span>.<span class="property">message</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>POST / PUT 请求</strong>：输入 URL 和表单数据，数据以 json 形式传递。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">post</span>(<span class="string">&#x27;/post&#x27;</span>,&#123;</span><br><span class="line">  <span class="attr">uname</span>:<span class="string">&#x27;tom&#x27;</span>,</span><br><span class="line">  <span class="attr">password</span>:<span class="number">123456</span></span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">ret</span>=&gt;</span>&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(ret.<span class="property">data</span>.<span class="property">message</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>axios 中的 params与 data 传参的区别:<br>    params 传参，参数以 k=v&amp;k=v 格式放置在 url 中传递。<br>    data 传参，参数会在 form 表单中。</p>
+</blockquote>
+<p><strong>对于返回响应结果 ret</strong> </p>
+<ul>
+<li><code>ret.data</code> : 响应返回数据，可读取返回数据中某一具体属性。</li>
+<li><code>ret.headers</code> : 响应头信息</li>
+<li><code>ret.status</code> : 响应状态码</li>
+<li><code>ret.statusText</code> : 响应状态信息</li>
+</ul>
+<h4 id="同步请求"><a href="#同步请求" class="headerlink" title="同步请求"></a>同步请求</h4><p>不管是 fetch 和 axios 都是异步发送请求，这是前端界面通用做法。</p>
+<p>使用 async/await 可以将 axios 异步请求同步化，async 函数会等待 await 返回数据后再向下执行。</p>
+<p>通常放在 try 语句中，如果超时未获得数据则直接进入异常处理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> getHistoryData (data) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> axios.<span class="title function_">get</span>(<span class="string">&#x27;/api/survey/list/&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">params</span>: data</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">tableData</span> = res.<span class="property">data</span>.<span class="property">result</span></span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>表单提交自带校验方法 <code>validate(callback)</code>{ 直接返回 Promise 对象}，默认 valid 为 true 通过。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对于 ID 为 addFormRef 的表单</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$refs</span>.<span class="property">addFormRef</span>.<span class="title function_">validate</span>(<span class="keyword">async</span> valid =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (!valid) <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">const</span> &#123; <span class="attr">data</span>: res &#125; = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">$http</span>.<span class="title function_">post</span>(<span class="string">&#x27;adddevice&#x27;</span>, <span class="variable language_">this</span>.<span class="property">addForm</span>)</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(res)</span><br><span class="line">        <span class="keyword">if</span> (res.<span class="property">code</span> !== <span class="number">200</span>) <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">$message</span>.<span class="title function_">error</span>(res.<span class="property">message</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$message</span>.<span class="title function_">success</span>(res.<span class="property">message</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">go</span>(-<span class="number">1</span>)</span><br><span class="line">      &#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>拦截器</strong></p>
+<p>对请求或者响应进行加工处理。</p>
+<ol>
+<li>对请求加工处理</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="property">intercepter</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="keyword">function</span>(<span class="params">config</span>)&#123;</span><br><span class="line">  <span class="comment">// 首个函数执行拦截修改功能</span></span><br><span class="line">  config.<span class="property">headers</span>.<span class="property">mytoken</span> = <span class="string">&#x27;nihao&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;,<span class="keyword">function</span>(<span class="params">error</span>)&#123;</span><br><span class="line">  <span class="comment">// 第二个函数 反馈错误信息</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>对响应结果加工处理</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="property">intercepter</span>.<span class="property">response</span>.<span class="title function_">use</span>(<span class="keyword">function</span>(<span class="params">res</span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> data = res.<span class="property">data</span>;</span><br><span class="line">  <span class="keyword">return</span> data;</span><br><span class="line">&#125;,<span class="keyword">function</span>(<span class="params">error</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="vue-路由"><a href="#vue-路由" class="headerlink" title="vue 路由"></a>vue 路由</h2><h3 id="什么是路由"><a href="#什么是路由" class="headerlink" title="什么是路由"></a>什么是路由</h3><p>路由的作用：把用户远程请求映射到相应的网络资源。可采用以下两种方式：</p>
+<ul>
+<li>后端路由：服务器根据用户请求 URL 返回 html 页面，浏览器直接显示。（频繁刷新界面）</li>
+<li>前端路由：服务器根据用户请求 URL 返回 json 数据，浏览根据用户触发事件更新 html 页面。（无法记录历史访问）</li>
+</ul>
+<p>现在主流开发使用基于前端路由的 SPA 技术：整个网站只有一个界面，使用 ajax 技术局部更新界面，同时支持浏览器界面的前进后退操作。</p>
+<h3 id="vue-router-插件"><a href="#vue-router-插件" class="headerlink" title="vue router 插件"></a>vue router 插件</h3><p>vue 深度集成了官方路由管理器 vue router。可选【使用用户操作历史或哈希存储历史访问】.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入 vue router--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/vue/dist/vue-router.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>开发者在专用的路由 js 文件中定义路由规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">User</span> = &#123;...&#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">Register</span> = &#123;...&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 路由规则</span></span><br><span class="line">  <span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">    <span class="attr">routes</span>:[</span><br><span class="line">      &#123;<span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,<span class="attr">redirect</span>:<span class="string">&#x27;/user&#x27;</span>&#125;, <span class="comment">// 重定向</span></span><br><span class="line">      &#123;<span class="attr">path</span>:<span class="string">&#x27;/user&#x27;</span>,<span class="attr">component</span>:<span class="title class_">User</span>&#125;,</span><br><span class="line">      &#123;<span class="attr">path</span>:<span class="string">&#x27;/register&#x27;</span>,<span class="attr">component</span>:<span class="title class_">Register</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">    <span class="attr">el</span>:<span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>:&#123;&#125;,</span><br><span class="line">    <span class="title class_">Router</span>: router</span><br><span class="line">  &#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 vue 组件中，点击 router-link 组件实现页面跳转，预留的 router-view 区域将显示指定组件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--路由链接--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/user&quot;</span>&gt;</span>User<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/register&quot;</span>&gt;</span>Register<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--路由占位符，显示位置--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">router-view</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="嵌套路由"><a href="#嵌套路由" class="headerlink" title="嵌套路由"></a>嵌套路由</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">Tab1</span> = &#123;...&#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">Tab2</span> = &#123;...&#125;;</span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">Register</span> = &#123;</span><br><span class="line">    <span class="attr">template</span>:<span class="string">&#x27;</span></span><br><span class="line"><span class="string">      &lt;div&gt;</span></span><br><span class="line"><span class="string">        &lt;router-link to=&quot;/register/tab1&quot;&gt;Tab1&lt;/router-link&gt;</span></span><br><span class="line"><span class="string">        &lt;router-link to=&quot;/register/tab2&quot;&gt;Tab2&lt;/router-link&gt;</span></span><br><span class="line"><span class="string">        &lt;router-view /&gt;</span></span><br><span class="line"><span class="string">      &lt;/div&gt;</span></span><br><span class="line"><span class="string">    &#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">    <span class="attr">routes</span>:[</span><br><span class="line">      &#123;<span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>,<span class="attr">redirect</span>:<span class="string">&#x27;/user&#x27;</span>&#125;, <span class="comment">// 重定向</span></span><br><span class="line">      &#123;<span class="attr">path</span>:<span class="string">&#x27;/user&#x27;</span>,<span class="attr">component</span>:<span class="title class_">User</span>&#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">path</span>:<span class="string">&#x27;/register&#x27;</span>,</span><br><span class="line">        <span class="attr">component</span>:<span class="title class_">Register</span>,</span><br><span class="line">        <span class="attr">children</span>:[</span><br><span class="line">          &#123;<span class="attr">path</span>:<span class="string">&#x27;/register/tab1&#x27;</span>,<span class="attr">component</span>:<span class="title class_">Tab1</span>&#125;,</span><br><span class="line">          &#123;<span class="attr">path</span>:<span class="string">&#x27;/register/tab2&#x27;</span>,<span class="attr">component</span>:<span class="title class_">Tab2</span>&#125;</span><br><span class="line">        ]&#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">    <span class="attr">el</span>:<span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>:&#123;&#125;,</span><br><span class="line">    <span class="title class_">Router</span>: router</span><br><span class="line">  &#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态路由"><a href="#动态路由" class="headerlink" title="动态路由"></a>动态路由</h3><p>根据参数自动选择路由</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 动态路径</span></span><br><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>:[</span><br><span class="line">    &#123;<span class="attr">path</span>:<span class="string">&#x27;/user/:id&#x27;</span>,<span class="attr">component</span>: <span class="title class_">User</span>&#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态显示内容</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">User</span> = &#123;</span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;&lt;div&gt;User &#123;&#123;$route.params.id&#125;&#125;&lt;/div&gt;&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但 $route 的方式传参高度耦合，一般使用 props 将组件和路由解耦。还可以对路由路径进行命名。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>:[</span><br><span class="line">    &#123;<span class="attr">path</span>:<span class="string">&#x27;/user/:id&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;user&#x27;</span>,  <span class="comment">// 路由命名</span></span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">User</span>, </span><br><span class="line">    <span class="attr">props</span>:<span class="literal">true</span>&#125;  <span class="comment">// 动态路径</span></span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态显示内容</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">User</span> = &#123;</span><br><span class="line">  <span class="attr">props</span>:[<span class="string">&#x27;id&#x27;</span>],</span><br><span class="line">  <span class="attr">template</span>:<span class="string">&#x27;&lt;div&gt;User &#123;&#123;id&#125;&#125;&lt;/div&gt;&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;router-link :to=&quot;&#123;name:&#39;user&#39;,params:&#123;id:3&#125;&#125;&quot;&gt;User&lt;/router-link&gt;</code></p>
+<h3 id="路由语句执行"><a href="#路由语句执行" class="headerlink" title="路由语句执行"></a>路由语句执行</h3><h4 id="查询路由信息"><a href="#查询路由信息" class="headerlink" title="查询路由信息"></a>查询路由信息</h4><p>在 vue 组件中，可以通过 <code>$route</code> 查询当前路由的详细信息。在组件内，即 this.$route 。</p>
+<p>对于路由 /list/type/11?favorite=yes </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">path</span>:<span class="string">&#x27;/list/type/:id&#x27;</span>,</span><br><span class="line">  <span class="attr">name</span>:<span class="string">&#x27;user&#x27;</span>,  <span class="comment">// 路由命名</span></span><br><span class="line">  <span class="attr">component</span>: <span class="title class_">User</span>, </span><br><span class="line">  <span class="attr">props</span>:<span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`    </span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">path</span><span class="string">`  （字符串）返回绝对路径  $route.path=&#x27;/list/type/11&#x27;</span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">params</span><span class="string">` （对象）动态路径键值对   $route.params.id == 11 </span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">query</span><span class="string">`  （对象）查询参数键值对  $route.query.favorite == &#x27;yes&#x27; </span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">name</span><span class="string">`   （对象）路径名，没有则为空。 $route.name == &#x27;user&#x27;</span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">router</span><span class="string">`    路由规则所属的路由器（以及其所属的组件）。</span></span><br><span class="line"><span class="string">- `</span>$route.<span class="property">matched</span><span class="string">`    数组，包含当前匹配的路径中所包含的所有片段所对应的配置参数对象。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 执行路由跳转</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">在 vue 组件中，可以通过调用全局路由对象 `</span>$router<span class="string">` 查的方法实现页面跳转。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">push 方法和 &lt;router-link :to=&quot;...&quot;&gt; 等同，执行时跳转指定页面。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>js</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(<span class="string">&#x27;home&#x27;</span>)                                                /home</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(&#123; <span class="attr">path</span>: <span class="string">&#x27;home&#x27;</span> &#125;)                                      /home</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(&#123; <span class="attr">path</span>: <span class="string">&#x27;home&#x27;</span>, <span class="attr">query</span>: &#123; <span class="attr">plan</span>: <span class="string">&#x27;123&#x27;</span> &#125;&#125;)               /home?plan=<span class="number">123</span>（附带查询参数）</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;user&#x27;</span>, <span class="attr">params</span>: &#123; <span class="attr">id</span>: <span class="number">123</span> &#125;&#125;)                  /list/type/<span class="number">123</span>（根据命名跳转可以附带动态路径）</span><br></pre></td></tr></table></figure>
+
+
+<p>go 方法根据历史记录，跳转上一个或下一个页面。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">go</span>(-<span class="number">1</span>)                  返回之前的页面</span><br></pre></td></tr></table></figure>
+
+<p>replace 方法替换当前的页面，和 push 方法的不同在于不会历史记录（一般用于 404 页面）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">replace</span>(<span class="string">&#x27;/&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<h2 id="vue-项目结构"><a href="#vue-项目结构" class="headerlink" title="vue 项目结构"></a>vue 项目结构</h2><p>vue 项目由上述两种方式自动创建，其项目结构如下：</p>
+<ul>
+<li><p><strong>node_module 文件夹</strong>  / 依赖包目录</p>
+</li>
+<li><p><strong>public 文件夹</strong> /  静态资源，外部可直接访问</p>
+<ul>
+<li><strong>index.html</strong> / 输出界面</li>
+<li><strong>favicon.ico</strong> / 图标</li>
+</ul>
+</li>
+<li><p><strong>src 文件夹</strong> / 组件等资源，由静态资源加载</p>
+<ul>
+<li><strong>asserts 文件夹</strong> / css、img 文件</li>
+<li><strong>components 文件夹</strong> / vue 文件</li>
+</ul>
+</li>
+<li><p><strong>plugins 文件夹</strong> / 插件文件</p>
+</li>
+<li><p><strong>router 文件夹</strong> / 路由文件</p>
+</li>
+<li><p><strong>App.vue</strong> / 核心组件</p>
+</li>
+<li><p><strong>main.js</strong> / 入口文件</p>
+</li>
+</ul>
+<p>还有一些其他配置文件，比如项目配置文件 package.json。<br>用户可以创建 vue.config.js 对 vue 进行自定义配置，默认覆盖原配置。</p>
+<h2 id="vue-常用插件"><a href="#vue-常用插件" class="headerlink" title="vue 常用插件"></a>vue 常用插件</h2><h3 id="组件库"><a href="#组件库" class="headerlink" title="组件库"></a>组件库</h3><p>不用自己画组件，可以使网站快速成型。推荐直接在图形化工具内导入。</p>
+<p>导入 element-ui 等桌面组件库，bootstrap 等移动端组件库。</p>
+<h3 id="Element-UI-组件库"><a href="#Element-UI-组件库" class="headerlink" title="Element UI 组件库"></a>Element UI 组件库</h3><p>官网：<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/installation">https://element.eleme.cn/#/zh-CN/component/installation</a></p>
+<ol>
+<li>安装依赖包 </li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install element-ui -S</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>main.js</code> 导入资源</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">ElementUI</span> <span class="keyword">from</span> <span class="string">&#x27;element-ui&#x27;</span>; </span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">ElementUI</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>$</code> 符用来绑定事件。</p>
+<p>this.$refs.tree.getCheckedKeys());  </p>
+<p>$refs代表一个引用：tree表示组件中某个元素（ref属性设为tree）,然后我们可以通过对象调用方法。</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/my466879168/p/12091439.html">https://www.cnblogs.com/my466879168/p/12091439.html</a> 局部修改css 样式</p>
+<style lang="scss">
+@import '../../styles/custom-menu.scss';
+  .menu-form .el-form-item__label {
+      text-align: left!important;
+      font-size: 20px!important;
+      color: #000!important;
+      font-weight: normal!important;
+}
+</style>
+
+
+
+
+
+
+
+
+<p>在属性前加冒号，表示此属性的值是变量或表达式，如果不加，就认为是字符串，所以抛错。!!!!!!!!</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E5%85%B6%E5%AE%83/%E5%89%8D%E7%AB%AF/vue/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B6%E5%AE%83/" rel="tag">其它</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%89%8D%E7%AB%AF/restful/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Restful 接口
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%B7%A5%E5%85%B7/docker/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Docker</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

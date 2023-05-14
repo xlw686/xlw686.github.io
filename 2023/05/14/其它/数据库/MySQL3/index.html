@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL3 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-其它/数据库/MySQL3"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL3
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL3/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a> / <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="MySQL-优化"><a href="#MySQL-优化" class="headerlink" title="MySQL 优化"></a>MySQL 优化</h1><hr>
+<h2 id="分表设计"><a href="#分表设计" class="headerlink" title="分表设计"></a>分表设计</h2><ol>
+<li>MySQL 数据库限制每个表最多存储 4096 列，并且每一行数据大小不能超过 65535 字节。</li>
+<li>数据量到达百万级以上时，会导致修改表结构、备份、恢复都有非常大的困难。</li>
+<li>数据量越大，装载进内存缓冲池时所占用的内存也就越大，缓冲池无法一次性装载时就会频繁进行磁盘 IO ，大大降低查询速率。</li>
+</ol>
+<p>因此当表数据量过大时，就要进行分表操作：</p>
+<ul>
+<li>水平分表：数据项分开存储。</li>
+<li>垂直分表：按字段拆分。</li>
+</ul>
+<h3 id="分表原则"><a href="#分表原则" class="headerlink" title="分表原则"></a>分表原则</h3><ol>
+<li><p>经常一起使用的数据放到一个表中，避免更多的关联操作。</p>
+</li>
+<li><p>尽量做到冷热数据分离，减小表的宽度，减少磁盘 IO，保证热数据的内存缓存命中率（表越宽，）；更有效的利用缓存，，避免读入无用的冷数据；</p>
+</li>
+</ol>
+<h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><p>对表进行逻辑拆分的准则。范式级别越高，存储数据冗余越小，但相应表之间的关系也越复杂导致难以维护。一般使用第三范式。</p>
+<ul>
+<li><p><strong>1NF</strong> 第一范式 关系数据库一定符合条件</p>
+</li>
+<li><p><strong>2NF</strong> 第二范式 不能产生部分依赖（非主键字段不能被主键中部分字段唯一确定）</p>
+</li>
+<li><p><strong>3NF</strong> 第三范式 不能存在传递依赖（非主键字段不能被其它非主键字段唯一确定）</p>
+</li>
+</ul>
+<hr>
+<h2 id="语句设计"><a href="#语句设计" class="headerlink" title="语句设计"></a>语句设计</h2><h3 id="语句查询"><a href="#语句查询" class="headerlink" title="语句查询"></a>语句查询</h3><ul>
+<li><strong>查询语句执行次数</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询数据库各类型语句执行次数</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> [SESSION] STATUS;                      <span class="comment">-- 当前连接</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> <span class="keyword">GLOBAL</span> STATUS;                         <span class="comment">-- 数据库开启后</span></span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> SESSION STATUS <span class="keyword">LIKE</span> <span class="string">&#x27;Com_insert%&#x27;</span>;     <span class="comment">-- 查询插入语句执行次数</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> <span class="keyword">GLOBAL</span> STATUS <span class="keyword">LIKE</span> <span class="string">&#x27;Innodb_rows_%&#x27;</span>;    <span class="comment">-- Innodb 专用，查询影响行数</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查询当前执行语句</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> PROCESSLIST;            <span class="comment">-- 查看数据库所有连接信息，包含正在执行的 SQL 语句</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> PROFILES;                           <span class="comment">-- 查看当前连接执行的所有指令：ID 和 执行时间</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> PROFILE <span class="keyword">FOR</span> QUERY <span class="number">5</span>;                <span class="comment">-- 显示第 5 条指令执行的具体信息                </span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> PROFILE CPU <span class="keyword">FOR</span> QUERY <span class="number">5</span>;            <span class="comment">-- 显示第 5 条指令各步骤的执行时间</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>解释语句执行方式</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> EXPLAIN 具体语句;                 <span class="comment">-- 解释语句执行的状况（重要）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="语句优化"><a href="#语句优化" class="headerlink" title="语句优化"></a>语句优化</h3><ol>
+<li>fileSort 排序，没有索引时利用文件系统排序，效率低。</li>
+<li>index 排序，如果通过索引能直接返回数据，效率高。（只能返回有索引的字段）</li>
+</ol>
+<p>对于 fileSort 排序，增大排序区大小满足排序需求，可以提高排序效率。</p>
+<p>对语句的优化，主要就是对于索引的运用。</p>
+<ol>
+<li><p>避免使用子查询，可以把子查询优化为 join 操作。子查询不能利用索引。</p>
+</li>
+<li><p>对应同一列进行 or 判断时，使用 in 代替 or。in 的值不要超过 500 个，in 操作可以更有效的利用索引，or 大多数情况下很少能利用到索引。</p>
+</li>
+</ol>
+<p>分组时，默认先排序后分组。会生成临时表。</p>
+<ol>
+<li>通过 ORDER BY null 不排序直接分组。</li>
+<li>上索引，有索引不临时。</li>
+</ol>
+<h4 id="LIMIT-分页查询"><a href="#LIMIT-分页查询" class="headerlink" title="LIMIT 分页查询"></a>LIMIT 分页查询</h4><p>使用连表查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">ORDER</span> <span class="keyword">BY</span> id LIMIT <span class="number">2000000</span>, <span class="number">10</span>;        # 浪费时间，排序 <span class="number">2000000</span> 条后筛选</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student s, (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> student <span class="keyword">ORDER</span> <span class="keyword">BY</span> id LIMIT <span class="number">2000000</span>, <span class="number">10</span>) t <span class="keyword">WHERE</span> s.id <span class="operator">=</span> t.id;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="优化方式"><a href="#优化方式" class="headerlink" title="优化方式"></a>优化方式</h2><h3 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h3><h4 id="批量插入"><a href="#批量插入" class="headerlink" title="批量插入"></a>批量插入</h4><p>注意：txt文件各个字段间，要用一个”table”键的距离隔开。一行只写一条数据。批量执行文本中的 SQL 语句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -&gt;load data infile &#x27;E:/student.txt&#x27; into table student;</span><br></pre></td></tr></table></figure>
+
+
+<ol>
+<li>按主键顺序插入更高效！生成有序 txt 更好。</li>
+<li>关闭唯一性校验：<code>SET UNIQUE CHECK = 0</code> ，导入完成后记得开启。</li>
+<li>事务提交，手动提交事务：<code>SET AUTOCOMMIt = 0</code> ，导入完成后记得开启。</li>
+</ol>
+<hr>
+<h2 id="批量执行"><a href="#批量执行" class="headerlink" title="批量执行"></a>批量执行</h2><h3 id="导入导出"><a href="#导入导出" class="headerlink" title="导入导出"></a>导入导出</h3><p>1<br>mysqldump -uroot -pMyPassword databaseName tableName1 tableName2 &gt; /home/foo.sql<br>mysqldump -u 用户名 -p 数据库名 数据表名 &gt; 导出的文件名和路径 </p>
+<p>导出整个数据库</p>
+<p>1<br>mysqldump -u root -p databaseName &gt; /home/test.sql   (输入后会让你输入进入MySQL的密码)<br>mysql导出数据库一个表，包括表结构和数据<br>mysqldump -u 用户名 -p 数据库名 表名&gt; 导出的文件名和路径</p>
+<p>1<br>mysqldump -u root -p databaseName tableName1 &gt; /home/table1.sql<br>如果需要导出数据中多张表的结构及数据时，表名用空格隔开</p>
+<p>1<br>mysqldump -u root -p databaseName tableName01 tableName02 &gt; /home/table.sql<br>仅导出数据库结构</p>
+<p>1<br>mysqldump -uroot -pPassWord -d databaseName &gt; /home/database.sql<br>仅导出表结构</p>
+<p>1<br>mysqldump -uroot -pPassWord -d databaseName tableName &gt; /home/table.sql<br>将语句查询出来的结果导出为.txt文件<br>1<br>mysql -uroot -pPassword database1 -e “select * from table1” &gt; /home/data.txt
+　　</p>
+<p>数据导入<br>常用source 命令<br>进入mysql数据库控制台，mysql -u root -p<br>mysql&gt;use 数据库<br>使用source命令，后面参数为脚本文件(.sql) </p>
+<p>1<br>mysql&gt;source /home/table.sql</p>
+<h3 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h3><p>将大批量、经常重复执行的 SQL 语句集合预存储在数据库里，外部程序可以直接调用，减少了不必要的网络通信代价。</p>
+<hr>
+<h2 id="SQL-安全"><a href="#SQL-安全" class="headerlink" title="SQL 安全"></a>SQL 安全</h2><h3 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h3><p>服务器向数据库发送的 SQL 语句往往包含用户输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 登录验证</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27; 用户输入1 &#x27;</span> <span class="keyword">and</span> password <span class="operator">=</span> <span class="string">&#x27; 用户输入2 &#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果攻击者在用户输入中插入 <code>&#39;</code>、<code>or</code>、<code>#</code> ，就可以改变 SQL 语句的功能。达到想要的目的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 返回 alice 用户信息，登录 alice 账号</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27; alice&#x27;</span># <span class="string">&#x27; and password = &#x27;</span> 用户输入<span class="number">2</span> <span class="string">&#x27;;</span></span><br><span class="line"><span class="string">-- 返回全部用户信息，通常会默认登录首个账号（管理员）</span></span><br><span class="line"><span class="string">SELECT * FROM users WHERE id = &#x27;</span> <span class="string">&#x27; or 1# &#x27;</span> <span class="keyword">and</span> password <span class="operator">=</span> <span class="string">&#x27; 用户输入2 &#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27; &#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;1 &#x27;</span> <span class="keyword">and</span> password <span class="operator">=</span> <span class="string">&#x27; 用户输入2 &#x27;</span>;     <span class="comment">-- AND 优先级高，先执行 AND 再执行 OR</span></span><br><span class="line"> <span class="comment">-- 直接删库</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27; &#x27;</span>; <span class="keyword">DROP</span> <span class="keyword">TABLE</span> users;#<span class="string">&#x27; &#x27;</span> <span class="keyword">and</span> password <span class="operator">=</span> <span class="string">&#x27; 用户输入2 &#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+<p>在执行攻击时，攻击者可能需要知道数据库表信息，譬如表名，列名等。</p>
+<ol>
+<li>通过错误信息发现（输入错误语句获取）：在进行开发的时候尽量不要把出错信息打印到页面上，使用专门的错误页。</li>
+<li>通过盲注发现：</li>
+</ol>
+<p>比如在用户输入中插入以下字符（如果表名首字母 ASCII 大于 97 则休眠 5s），就可以根据数据返回时间判断数据库表信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="string">&#x27; alice&#x27;</span> <span class="keyword">and</span> if((<span class="keyword">select</span> ascii(substr((<span class="keyword">select</span> table_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span> database() limit <span class="number">0</span>,<span class="number">1</span>),<span class="number">1</span>,<span class="number">1</span>)))<span class="operator">&gt;</span><span class="number">97</span>,sleep(<span class="number">5</span>),<span class="number">1</span>) # <span class="string">&#x27; and password = &#x27;</span> 用户输入<span class="number">2</span> <span class="string">&#x27;;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="SQL-注入防御"><a href="#SQL-注入防御" class="headerlink" title="SQL 注入防御"></a>SQL 注入防御</h3><p>(prepare_statement) 为避免 SQL 注入攻击，新版本后端语言(PHP/Java) 都支持对输入 SQL 语句预处理：会自动检查用户输入并对单引号用<code>\</code>做强制转义， MySQL 数据库收到转义后的单引号也会用 setString 方法做转义处理。</p>
+<p>学习网站开发的人就再也不用担心sql注入的威胁了。</p>
+<hr>
+<h3 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h3><p>InnoDB 用一块内存区做缓存池，既缓存数据也缓存索引。</p>
+<p>linux mysql 配置文件 user-my.cnf</p>
+<p>innodb_buffer_pool_size = 512M  （默认128m）</p>
+<p>innodb_log_buffer_size  日志缓存大小，过于小会频繁写入磁盘</p>
+<h3 id="日志管理"><a href="#日志管理" class="headerlink" title="日志管理"></a>日志管理</h3><hr>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B6%E5%AE%83/" rel="tag">其它</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL2
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Redis</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

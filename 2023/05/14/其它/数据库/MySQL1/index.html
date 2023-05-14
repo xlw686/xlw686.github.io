@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL1 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-其它/数据库/MySQL1"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL1
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL1/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a> / <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">15 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="MySQL-概念"><a href="#MySQL-概念" class="headerlink" title="MySQL 概念"></a>MySQL 概念</h1><hr>
+<h2 id="MySQL-数据库"><a href="#MySQL-数据库" class="headerlink" title="MySQL 数据库"></a>MySQL 数据库</h2><p>MySQL 是一种关系型数据库。开源免费，并且方便扩展。在 Java 开发中常用于保存和管理数据。默认端口号 3306。</p>
+<p>MySQL 数据库主要分为 Server 和存储引擎两部分，现在最常用的存储引擎是 InnoDB。</p>
+<hr>
+<h2 id="指令执行过程"><a href="#指令执行过程" class="headerlink" title="指令执行过程"></a>指令执行过程</h2><p>MySQL 数据库接收到用户指令后，首先由 Server 负责对数据操作的分析、处理和优化，再交给存储引擎执行数据存取操作。</p>
+<h3 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3><p>连接器负责用户登录数据库时的身份认证，校验账户密码。校验通过后连接器会连接到权限表，并读取该用户的所有权限。如果连接未断开，即使该用户权限被管理员修改也不受影响。</p>
+<h3 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a><del>查询缓存</del></h3><p>缓存 SELECT 语句以及返回的结果。收到查询语句会首先和缓存比对，如果相同就直接从查询缓存里返回数据。</p>
+<p>更新表后，这个表上的所有的查询缓存都会被清空。这导致实际使用场景中查询缓存的作用非常少，在 MySQL 8.0 版本后移除。</p>
+<h3 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h3><p>如果查询语句未命中缓存，或者是更新语句，那么将由分析器负责分析 SQL 语句的用途。</p>
+<ol>
+<li><p>词法分析：提取关键字，提取 SQL 语句的关键元素，明确 SQL 语句的功能。</p>
+</li>
+<li><p>语法分析：判断 SQL 语句是否正确，是否符合 MySQL 的语法。如果不符合语法则返回错误信息。</p>
+</li>
+</ol>
+<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>明确 SQL 语句功能后，由优化器负责选择尽可能最优的执行方案。比如多个索引的时候选择索引，多表查询的时候选择关联顺序。</p>
+<h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p>确定执行方案后，由执行器负责校验该用户有没有权限，并交由存储引擎执行语句，然后从存储引擎返回数据。</p>
+<hr>
+<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><p>实际执行对数据库数据的存取。目前 MySQL 默认使用 InnoDB 引擎。相比于过去使用 MyISAM 引擎，有以下几个优势：</p>
+<ol>
+<li>索引：数据文件本身是主索引。</li>
+<li>外键：支持外键。</li>
+<li>事务：添加本地日志，支持安全恢复；支持行级锁，提高并发度。</li>
+<li>并发：支持多版本并发控制，提升性能。</li>
+</ol>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h4 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h4><p>MySQL 数据库使用以下两种数据结构存储和查找数据：</p>
+<ol>
+<li><strong>B+ 树</strong>：（默认）适用于连续查询多条数据。</li>
+<li><strong>哈希表</strong>：适用于查询单条数据。</li>
+</ol>
+<h4 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h4><p>索引名称|索引类型|字段类型|备注<br>-|-|-<br>PRIMARY KEY|主索引|主键|字段值不能重复，也不能为空。<br>INDEX|普通索引|自定义字段|无，效率低。<br>UNIQUE|唯一索引|自定义字段|字段值不能重复，效率高。<br>FULLTEXT|文本索引|自定义字段|无，用于文本检索。</p>
+<ul>
+<li><strong>主索引</strong></li>
+</ul>
+<p>在 InnoDB 存储引擎中数据文件本身就是主索引（聚簇索引）：数据以 B+ 树形式存储，根据主键值进行排序。</p>
+<p>我们可以为其他字段建立辅助索引（非聚簇索引），以提高对字段的查询速度，但同时会降低表的更新速度。在辅助索引中记录主键值而不是字段地址：根据辅助索引查找后，仍需要根据主键值在主索引中查询数据。</p>
+<ul>
+<li><strong>组合索引</strong></li>
+</ul>
+<p>索引内可以包含多个字段，N 个字段的组合索引实际建立了 N 个索引。</p>
+<p>对 a/b/c 三个字段建立的组合索引，实际会先在 a 索引中查找，再到 a/b 索引中查找，最后在 a/b/c 索引中查找。</p>
+<h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><p>视图是一个虚拟表，不实际存储数据。其内容会通过查询其他表得到，在引用视图时动态生成。</p>
+<ol>
+<li>权限管理：表的权限管理不能限制到具体的行和列，但通过视图则可以限制用户能得到的结果集。</li>
+<li>数据独立：表的结构发生变化，不会对用户使用视图查询到的数据产生影响。</li>
+</ol>
+<h3 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h3><p>从表通过外键关联到主表的主键，建立数据表之间的关系。</p>
+<ul>
+<li>优点：保障数据的一致性和完整性。</li>
+<li>缺点：增加数据之间的耦合度，难以集群。<strong>因此不推荐使用外键。</strong></li>
+</ul>
+<h4 id="删除策略"><a href="#删除策略" class="headerlink" title="删除策略"></a>删除策略</h4><p>对主表的数据进行 UPDATE/DELETE 操作时，将会会影响到关联的从表。</p>
+<table>
+<thead>
+<tr>
+<th>外键模式</th>
+<th>删除策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RESTRICT</td>
+<td>（默认）从表有相关数据时，主表不能更新/删除。</td>
+</tr>
+<tr>
+<td>CASCADE</td>
+<td>主表记录更新/删除时，从表相关记录也会被更新/删除。</td>
+</tr>
+<tr>
+<td>SET NULL</td>
+<td>主表数据更新/删除时，从表相关记录的外键值被设为 NULL。</td>
+</tr>
+<tr>
+<td>NO ACTION</td>
+<td>啥也不做</td>
+</tr>
+</tbody></table>
+<h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><p>当数据库数据发生更改时，用日志记录数据库操作。当发生错误或者冲突时，可以进行回滚。保证数据的一致性。</p>
+<h4 id="bin-log-归档日志"><a href="#bin-log-归档日志" class="headerlink" title="bin log 归档日志"></a>bin log 归档日志</h4><p>最开始 MySQL 并没与 InnoDB 引擎，其他存储引擎只有通用的 bin 日志用来归档（位于 server 层）。</p>
+<p>InnoDB 引擎完成主存数据更新后向执行器提交，由 bin 日志记录操作。如果主存数据已更新，且 bin 日志没有被写入时数据库崩溃，后续进行机器备份的时候就会丢失原有数据。这导致数据没有安全恢复的能力：一旦数据库发生异常重启，之前提交的记录都会丢失。</p>
+<h4 id="redolog-重做日志"><a href="#redolog-重做日志" class="headerlink" title="redolog 重做日志"></a>redolog 重做日志</h4><p>MySQL 引入 InnoDB 引擎后，自带了 redo 日志。用于数据库发生异常重启时系统记录的恢复。</p>
+<ol>
+<li>InnoDB 引擎完成主存数据更新但还未提交时，由 redo 日志记录操作并进入 prepare 状态。</li>
+<li>InnoDB 引擎向执行器提交时，由 bin 日志记录操作。</li>
+<li>提交完成后执行器通知 InnoDB 引擎，redo 日志进入 commit 状态。</li>
+</ol>
+<p>如果 bin 日志没有被写入时数据库崩溃，后续进行机器备份的时候就会按照 redo 日志恢复数据。</p>
+<p>如果 bin 日志已经写完但 redo 日志还处于 prepare 状态时数据库崩溃。MySQL 会判断 redo 日志是否完整，如果完整就立即提交。否则再判断 bin 日志是否完整，如果完整就提交 redo 日志，不完整就回滚事务。这样就解决了数据一致性的问题。</p>
+<hr>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务是逻辑上的一组操作，要么都执行，要么都不执行。保障数据之间的同步。</p>
+<h3 id="事务特性-ACID"><a href="#事务特性-ACID" class="headerlink" title="事务特性 ACID"></a>事务特性 ACID</h3><ul>
+<li><strong>原子性</strong>： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；</li>
+<li><strong>一致性</strong>： 执行事务前后，数据保持一致，多个事务对同一个数据读取的结果是相同的；</li>
+<li><strong>隔离性</strong>： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的；</li>
+<li><strong>持久性</strong>： 一个事务被提交之后。它对数据库中数据的改变是持久的，即使数据库发生故障也不应该对其有任何影响。</li>
+</ul>
+<h3 id="并发事务潜在问题"><a href="#并发事务潜在问题" class="headerlink" title="并发事务潜在问题"></a>并发事务潜在问题</h3><ul>
+<li><strong>丢失修改</strong></li>
+</ul>
+<p>事务（T1）修改数据的过程中，另一个并发事务（T2）也修改了该数据。导致事务（T1）对数据的修改丢失。</p>
+<ul>
+<li><strong>脏读</strong></li>
+</ul>
+<p>事务（T1）修改数据但还未写入数据库时，另一个并发事务（T2）使用了该数据。导致事务（T2）读取数据可能是不正确的。</p>
+<ul>
+<li><strong>不可重复读</strong></li>
+</ul>
+<p>事务（T1）两次读取数据的过程中，另一个并发事务（T2）修改了该数据。导致事务（T1）两次读取数据的结果不同。</p>
+<ul>
+<li><strong>幻读</strong></li>
+</ul>
+<p>事务（T1）两次读取数据集合的过程中，另一个并发事务（T2）插入或删除了部分数据。导致事务（T1）两次读取数据的结果不同。</p>
+<h3 id="数据锁"><a href="#数据锁" class="headerlink" title="数据锁"></a>数据锁</h3><p>存储引擎通过给数据加锁来保障事务性。MyISAM 引擎只支持表级锁，而 InnoDB 存储引擎支持行级锁和表级锁，默认为行级锁。</p>
+<ul>
+<li><p><strong>表级锁</strong>：对当前操作的整张表加锁，实现简单，资源消耗也比较少，加锁快，不会出现死锁。但触发锁冲突的概率最高，并发度低。</p>
+</li>
+<li><p><strong>行级锁</strong>：只针对当前操作的数据行加锁。大大减少数据库操作的冲突，并发度高。但加锁的开销也最大，可能会出现死锁。</p>
+</li>
+</ul>
+<p>InnoDB支持三种行锁定方式：</p>
+<ul>
+<li><strong>间隙锁</strong>：锁定索引的记录间隙，确保索引记录的间隙不变。</li>
+</ul>
+<p>Next-Key Lock 是行级锁和间隙锁的组合使用。当 InnoDB 扫描索引记录的时候，会首先对索引记录加上行锁（Record Lock），再对索引记录两边的间隙加上间隙锁（Gap Lock）。其他事务就不能在这个间隙修改或者插入记录。间隙锁是针对事务隔离级别为可重复读或以上级别，可以有效防止幻读的发生。</p>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><ul>
+<li><strong>READ-UNCOMMITTED(RU) 读取未提交</strong> </li>
+</ul>
+<p>事务进行读操作时允许其他事务访问，事务进行写操作将会禁止其他事务写。</p>
+<ul>
+<li><strong>READ-COMMITTED(RC) 读取已提交</strong></li>
+</ul>
+<p>事务进行读操作时允许其他事务访问，事务进行写操作将会禁止其他事务读写。</p>
+<ul>
+<li><strong>REPEATABLE-READ(RR) 可重复读</strong></li>
+</ul>
+<p>事务进行读操作时会禁止其他事务写，事务进行写操作将会禁止其他事务读写。</p>
+<ul>
+<li><strong>SERIALIZABLE 可串行化</strong></li>
+</ul>
+<p>事务进行读写操作时，都会禁止其他事务读写。</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>丢失修改</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>READ-UNCOMMITTED</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>READ-COMMITTED</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>REPEATABLE-READ</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>SERIALIZABLE</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<ol>
+<li>InnoDB 存储引擎默认支持的隔离级别是 REPEATABLE-READ(RR) ，且 InnoDB 在该事务隔离级别下使用 Next-Key Lock 锁算法，可以避免幻读。</li>
+<li>InnoDB 存储引擎在分布式事务情况下一般会用到 SERIALIZABLE 隔离级别。</li>
+</ol>
+<hr>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><h3 id="MVCC-概念"><a href="#MVCC-概念" class="headerlink" title="MVCC 概念"></a>MVCC 概念</h3><p>MVCC 即多版本并发控制，维持一个数据的多个版本，使得读写操作没有冲突。从而提高数据库并发性能，做到即使有读写冲突时，也能不加锁非阻塞并发读。</p>
+<p>是乐观锁的一整实现方式，就是每行都有版本号，保存时根据版本号决定是否成功。</p>
+<h3 id="读类型"><a href="#读类型" class="headerlink" title="读类型"></a>读类型</h3><ul>
+<li>当前读</li>
+</ul>
+<p> 读取的是记录最新版本，同时会对读取的记录进行加锁保证其他并发事务不能修改<br>select lock in share mode(共享锁), select for update ; update, insert ,delete</p>
+<ul>
+<li>快照读</li>
+</ul>
+<p>可能读到的是数据之前的历史版本.在很多情况下，避免了加锁操作，降低了开销；</p>
+<p>像不加锁的select操作就是快照。但如果隔离级别是最高级串行化，快照读会退化成当前读。</p>
+<h3 id="MVCC-实现"><a href="#MVCC-实现" class="headerlink" title="MVCC 实现"></a>MVCC 实现</h3><p>在 InnoDB 存储引擎中，每行记录除了我们自定义的字段外，还会隐式记录：</p>
+<ol>
+<li>最近修改：记录创建这条记录/最后一次修改该记录的事务ID</li>
+<li>回滚指针：指向这条记录的上一个版本，存储于 rollback segment 里。</li>
+<li>隐藏主键：如果数据表没有主键，InnoDB 会自动产生一个自增的聚簇索引。</li>
+<li>删除标记：标记该记录是否已被删除。</li>
+</ol>
+<p>事务进行快照读操作的时候生产的读视图(Read View)，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个快照，记录并维护系统当前活跃事务的ID(当每个事务开启时，都会被分配一个ID, 这个ID是递增的，所以最新的事务，ID值越大)。</p>
+<p>InnoDB 会根据读取事务 ID 判断应该都什么时间段的数据。</p>
+<p>在RC隔离级别下，是每个快照读都会生成并获取最新的Read View；而在RR隔离级别下，则是同一个事务中的第一个快照读才会创建Read View, 之后的快照读获取的都是同一个Read View。</p>
+<hr>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h3><p>常用的字符串类型有定长字符串 CHAR 和变长字符串 VARCHAR 两种，必须用数字注明可容纳的字符数。</p>
+<ul>
+<li>CHAR(n) 表示固定容纳 n 个字符，当少于 n 个字符时，会使用空格填充。</li>
+<li>VARCHAR(n) 表示最多容纳 n 个字符，当少于 n 个字符时不会补空。起始位和结束位需要额外 3 字节。</li>
+</ul>
+<blockquote>
+<p>英文字母单个字符占 1 字节。汉字单个字符 UTF-8 编码占 3 字节，GBK 编码占 2 字节。</p>
+</blockquote>
+<p>对于长字符串数据可以用 TEXT 或 BLOB 类型存储，固定占用 65535 字节。其中 TEXT 保存文本格式，BLOB 保存二进制格式。如果需要存储更短或更长的字符串类型数据，可以使用 TEXT/BLOB 的扩充类型：如 TINYTEXT、MEDIUMTEXT 和 LONGTEXT。</p>
+<table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>大小（字节）</th>
+<th>数据库类型</th>
+<th>JAVA 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CHAR(n)</td>
+<td>N(0-255)</td>
+<td>CHAR</td>
+<td>String</td>
+</tr>
+<tr>
+<td>VARCHAR(n)</td>
+<td>N+3(0-65535)</td>
+<td>VARCHAR</td>
+<td>String</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>65535</td>
+<td>VARCHAR</td>
+<td>String</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>65535</td>
+<td>BLOB</td>
+<td>byte[]</td>
+</tr>
+</tbody></table>
+<p>CHAR 类型最大只能容纳 255 字节数据，已不推荐使用。目前 VARCHAR 支持容纳最大 65535 字节数据，且长度不固定能有效节省数据库空间，推荐尽量使用 VARCHAR 数据类型取代 TEXT。</p>
+<p>TEXT/BLOB 等大数据类型不支持 MySQL 内存临时表，进行排序等操作必须在磁盘中进行。尽量不要使用，一定要用建议单独建表。</p>
+<h3 id="整型-amp-浮点型"><a href="#整型-amp-浮点型" class="headerlink" title="整型 &amp; 浮点型"></a>整型 &amp; 浮点型</h3><h4 id="布尔型"><a href="#布尔型" class="headerlink" title="布尔型"></a>布尔型</h4><p>布尔型数据用 BIT 表示。</p>
+<table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>大小（字节）</th>
+<th>取值</th>
+<th>JAVA 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BIT</td>
+<td>1</td>
+<td>0 or 1</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h4 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h4><p>整形数据一般用 INT/INTEGER 表示，固定占用 4 字节。如果需要存储更短或更长的整型数据，可以使用 INT 的扩充类型：如 TINYINT、SMALLTEXT 和 MEDIUMTEXT 和 BIGINT。</p>
+<p>在声明整型数据时也可以注明显示位宽，如 int(n)。在整形数据不足 n 位时会自动补零，几乎没有任何用处。</p>
+<table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>大小（字节）</th>
+<th>表示范围</th>
+<th>JAVA 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>(-128，127)    (0，255)</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>(-32 768，32 767)(0，65 535)</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3</td>
+<td>(-8 388 608，8 388 607)(0，16 777 215)</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>INT/INTEGER</td>
+<td>4</td>
+<td>(-2 147 483 648，2 147 483 647)    (0，4 294 967 295)</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>非常大</td>
+<td>BigInteger</td>
+</tr>
+</tbody></table>
+<h4 id="浮点型"><a href="#浮点型" class="headerlink" title="浮点型"></a>浮点型</h4><p>常用的浮点型数据类型有 FLOAT/DOUBLE ，FLOAT 类型固定占用 4 字节，DOUBLE 类型固定占用 8 字节。但 FLOAT/DOUBLE 只是近似存储，在数据库中我们常用 DECIMAL 类型记录金额，在数据库中实际以字符串形式存储，以确保不会产生任何误差。</p>
+<ul>
+<li>DECIMAL(M,D) M 表示最大位数，D 表示小数点右侧的位数。如 DECIMAL(5,2) ，小数点前 3 位，小数点后 2 位。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>大小（字节）</th>
+<th>表示范围</th>
+<th>JAVA 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FLOAT</td>
+<td>4</td>
+<td></td>
+<td>Float</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>8</td>
+<td></td>
+<td>Double</td>
+</tr>
+<tr>
+<td>DECIMAL(M,D)</td>
+<td>M + 2</td>
+<td></td>
+<td>BigDecimal</td>
+</tr>
+</tbody></table>
+<h3 id="日期类型"><a href="#日期类型" class="headerlink" title="日期类型"></a>日期类型</h3><p>java.sql 包内有专用 Java 类型匹配，注意数据类型必须是 <code>java.sql.Date</code>，而不是 <code>java.util.Date</code> 。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小（字节）</th>
+<th>格式</th>
+<th>表示范围</th>
+<th>JAVA 类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>YEAR</td>
+<td>1</td>
+<td><code>YYYY</code></td>
+<td><code>1901/2155</code></td>
+<td>Date</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>3</td>
+<td><code>YYYY-MM-DD</code></td>
+<td><code>1000-01-01/9999-12-31</code></td>
+<td>Date</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>3</td>
+<td><code>HH:MM:SS</code></td>
+<td><code>-838:59:59&#39;/&#39;838:59:59</code></td>
+<td>Time</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4</td>
+<td><code>YYYY-MM-DD HH:MM:SS</code></td>
+<td><code>1970-01-01 00:00:00/2038-1-19 11:14:07</code></td>
+<td>Timestamp</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>8</td>
+<td><code>YYYY-MM-DD HH:MM:SS</code></td>
+<td><code>1000-01-01 00:00:00/9999-12-31 23:59:59</code></td>
+<td>Timestamp</td>
+</tr>
+</tbody></table>
+<h3 id="枚举-amp-集合"><a href="#枚举-amp-集合" class="headerlink" title="枚举 &amp; 集合"></a>枚举 &amp; 集合</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tab(  </span><br><span class="line">   gender enum(<span class="string">&#x27;male&#x27;</span>,<span class="string">&#x27;remale&#x27;</span>,<span class="string">&#x27;secret&#x27;</span>)            <span class="comment">-- gender 属性为枚举类型</span></span><br><span class="line">);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tab <span class="keyword">values</span> (<span class="string">&#x27;remale&#x27;</span>);  </span><br><span class="line"></span><br><span class="line"> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tab <span class="keyword">where</span> gender<span class="operator">=</span><span class="number">2</span>;                  <span class="comment">-- 两者等价</span></span><br><span class="line">  <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tab <span class="keyword">where</span> gender<span class="operator">=</span> <span class="string">&#x27;remale&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>记录字符串，但底层数据实际以2个字节的整型(smallint)保存。</p>
+<p>在已知的值中进行单选。最大数量为65535.按保存的位置顺序，从1开始逐一递增。</p>
+<p>NULL值的索引是NULL。空字符串错误值的索引值是0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tab(  </span><br><span class="line">   gender <span class="keyword">set</span>(<span class="string">&#x27;male&#x27;</span>,<span class="string">&#x27;remale&#x27;</span>,<span class="string">&#x27;secret&#x27;</span>)            <span class="comment">-- gender 属性为集合类型</span></span><br><span class="line">);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tab <span class="keyword">values</span> (<span class="string">&#x27;male&#x27;</span>, <span class="string">&#x27;remale&#x27;</span>);  </span><br></pre></td></tr></table></figure>
+
+<p>记录字符串，但底层数据实际以8个字节的整型(bigint)保存。</p>
+<p>在已知的值中进行多选。最多有 64 个成员。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询 flag 字段包含 a,b 的字段</span></span><br><span class="line">mysql <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table_name <span class="keyword">where</span> FIND_IN_SET(<span class="string">&#x27;a,d&#x27;</span>, flag);</span><br></pre></td></tr></table></figure>
+
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B6%E5%AE%83/" rel="tag">其它</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%B7%A5%E5%85%B7/maven/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Maven
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL2/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL2</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

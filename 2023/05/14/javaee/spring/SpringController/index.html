@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Spring Controller |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-javaee/spring/SpringController"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Spring Controller
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/javaee/spring/SpringController/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javaee/">javaee</a> / <a class="article-category-link" href="/categories/javaee/Spring/">Spring</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Spring-Controller"><a href="#Spring-Controller" class="headerlink" title="Spring Controller"></a>Spring Controller</h1><hr>
+<h2 id="服务器控制"><a href="#服务器控制" class="headerlink" title="服务器控制"></a>服务器控制</h2><h3 id="响应架构"><a href="#响应架构" class="headerlink" title="响应架构"></a>响应架构</h3><p>Spring Boot 内集成了 Tomcat 服务器，也可以外接 Tomcat 服务器。通过控制层接收浏览器的 URL 请求进行操作并返回数据。</p>
+<p>底层和浏览器的信息交互仍旧由 servlet 完成，服务器整体架构如下：</p>
+<ul>
+<li><p><strong>Server</strong>： Tomcat 最顶层容器，代表整个服务器。</p>
+<ul>
+<li><strong>Service</strong>：服务，对应不同的任务。<ul>
+<li><strong>Connector</strong>：有多个，用来处理连接相关的事情，并提供 Socket 到 Request 和 Response 相关转化。</li>
+<li><strong>Container</strong>：只有一个，用于封装和管理 Servlet ，以及处理具体的 Request 请求。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h3><p>main 方法： 实例化 SpringApplication ，执行run方法</p>
+<p>run方法：<br>    配置属性、获取监听器，初始化输入参数、配置环境，输出banner<br>    创建上下文、预处理上下文、刷新上下文、再刷新上下文：context</p>
+<p>refreshApplicationContext方法：通过ServletWebServerFactory接口定义了getwebServer方法，通过其创建webServer并返回（创建时做了两件重要的事情：把Connector对象添加到tomcat中，配置引擎）【TomcatServletWebServerFactory是接口其中一个实现类】</p>
+<p>TomcatwebServer类中，规定了Tomcat服务器的启动和关闭方法。</p>
+<p>而tomcat的启动主要是实例化两个组件：Connector、Container</p>
+<hr>
+<h2 id="Controller-实现"><a href="#Controller-实现" class="headerlink" title="Controller 实现"></a>Controller 实现</h2><p>Controller 类需要使用 <code>@RestController</code> 或 <code>@Controller</code> 注解标注。</p>
+<ul>
+<li><p><code>@Controller</code>：类中所有方法以 String 形式返回 classpath 路径下同名 html 页面。适用于 JSP/thymeleaf 等动态加载页面。</p>
+</li>
+<li><p><code>@RestController</code>：类中所有方法以 Map/List 等形式返回 JSON 数据。适用于前后端分离开发。</p>
+</li>
+</ul>
+<p>P.S. <code>@Controller</code> 类中标注 <code>@ResponseBody</code> 的方法，可以起到和 <code>@RestController</code> 类相同的效果。</p>
+<h3 id="请求映射"><a href="#请求映射" class="headerlink" title="请求映射"></a>请求映射</h3><ol>
+<li>Controller 类中的方法使用 <code>@RequestMapping</code> 注解标注，就可以将指定 URL 请求映射到方法上处理。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)</span>     <span class="comment">// 参数为 URL 路径和请求方式</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/hello&quot;)</span>                                         <span class="comment">// 默认接收所有请求方式</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/hello&quot;)</span>                                             <span class="comment">// 简写形式的 GET 请求</span></span><br><span class="line"><span class="meta">@PostMapping(&quot;/hello&quot;)</span>                                            <span class="comment">// 简写形式的 POST 请求</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 灵活映射</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/?/hello&quot;)</span>                                       <span class="comment">// ? 匹配单字符</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/*/hello&quot;)</span>`：                                    <span class="comment">// * 匹配任意数量字符</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/**/hello&quot;)</span>：                                    <span class="comment">// ** 匹配任意数量目录</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/&#123;ID&#125;/hello&quot;)</span>`                                   <span class="comment">// &#123;&#125; 自动读取 URL 路径动态参数</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Controller 类也可以通过 <code>@RequestMapping</code> 注解标注，表示路径下的 URL 请求在该类中寻找方法。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/speak&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpeakController</span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">()</span>&#123; <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>; &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="GET-请求参数"><a href="#GET-请求参数" class="headerlink" title="GET 请求参数"></a>GET 请求参数</h3><p>GET 请求参数直接附着在 URL 中。对于请求 <code>/test?username=mrjoker&amp;password=123456</code> ，Controller 方法有以下几种方式接收：</p>
+<ol>
+<li>直接获取参数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(String username, String password)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> username + password;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>通过 HttpServletRequest 类来获取参数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(HttpServletRequest request)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> username + password;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>通过自定义对象来获取参数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(User user)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> user.getUsername();</span><br><span class="line">    <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> user.getPassword();</span><br><span class="line">    <span class="keyword">return</span> username + password;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>通过 RequestParam 注解来获取参数，实参值赋给形参。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(<span class="meta">@RequestParam(value=&quot;username&quot;,required = false, defaultValue =&quot;mrjoker&quot;)</span> String s1, <span class="meta">@RequestParam(&quot;password&quot;)</span> String s2)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> s1 + s2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>通过 PathVariable 注解来动态获取参数，参数直接附着在 URL 中。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/test/&#123;username&#125;/&#123;password&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(<span class="meta">@PathVariable(&quot;username&quot;)</span> String s1, <span class="meta">@PathVariable(&quot;password&quot;)</span> String s2)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> s1 + s2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>通过 ModelAttribute 注解来获取其他方法返回值作为参数，被注释方法会在此 controller 中每个方法执行前被执行。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldController</span> &#123; </span><br><span class="line">    <span class="meta">@ModelAttribute</span> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">populateModel</span><span class="params">(<span class="meta">@RequestParam</span> String abc, Model model)</span> &#123; </span><br><span class="line">        model.addAttribute(<span class="string">&quot;attributeName&quot;</span>, abc); </span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/helloWorld&quot;)</span> </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">helloWorld</span><span class="params">()</span> &#123; </span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;helloWorld&quot;</span>; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="POST-请求参数"><a href="#POST-请求参数" class="headerlink" title="POST 请求参数"></a>POST 请求参数</h3><p>POST 请求请求参数放置在请求体中，有以下两种格式：</p>
+<ul>
+<li><strong>Form Data 格式</strong></li>
+</ul>
+<p>请求的 Content-Type 为 application/x-www-form-urlencoded</p>
+<p>示例：<code>username=mrjoker&amp;password=123456</code></p>
+<ul>
+<li><strong>Request Payload 格式</strong></li>
+</ul>
+<p>请求的 Content-Type 为 application/json 或者 multipart/form-data</p>
+<p>示例：<code>&#123;&quot;username&quot;:&quot;mrjoker&quot;, &quot;password&quot;:&quot;123456&quot;&#125;</code></p>
+<ol>
+<li>AJAX 提交 POST 请求默认使用 Form Data 格式，Spring MVC 会自动解析到对应的 bean 中并获取参数。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 逐个参数接收</span></span><br><span class="line"><span class="meta">@RequestMapping(value=&quot;/test&quot;, method=RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">test</span><span class="params">(<span class="meta">@RequestParam(&quot;username&quot;)</span> String username, <span class="meta">@RequestParam(&quot;password&quot;)</span> String password)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> username + password;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析为整体接收</span></span><br><span class="line"><span class="meta">@RequestMapping(value=&quot;/test&quot;, method=RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">test</span><span class="params">(User user)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> user.getUsername() + user.getPassword();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>Vue 提交 POST 请求默认使用 Request Payload 格式，Spring MVC 接收时必须进行处理：</p>
+<ul>
+<li>前端解决方案： axios 库可以使用 qs 库将 json 对象转化为 Form Data 格式。</li>
+<li>后端解决方案： Spring Boot 在请求参数上加 <code>@RequestBody</code> 注解，将请求正文解析到对应的 bean 中获取参数。</li>
+</ul>
+</li>
+</ol>
+<p><code>@RequestBody</code> 可以直接以 String 接收前端传过来的 json 数据，也可以用对象自动解析前端传过来的 json 数据。对象里定义 List 属性，可用来接收多条 json 数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// String 形式接收</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/test&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test</span><span class="params">(<span class="meta">@RequestBody</span> String user)</span> &#123;</span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">userJson</span> <span class="operator">=</span> JSON.parseObject(user);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> userJson.getString(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> userJson.getString(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> username + password;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析为对象接收</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/test&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">updateClusterIdByClientAndQueue</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> user.getUsername() + user.getPassword();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>一个请求可以有多个 <code>@RequestParam</code>，但只能有一个 <code>@RequestBody</code>。 URL 内含有参数时，两者可以同时使用。</p>
+</blockquote>
+<h3 id="请求转发和重定向"><a href="#请求转发和重定向" class="headerlink" title="请求转发和重定向"></a>请求转发和重定向</h3><ol>
+<li><p><strong>请求转发（forward）</strong></p>
+<p> 客户端（浏览器）向服务器 A 发送一个 URL 请求，服务器 A 会向另一台服务器 B 获取资源并将此资源响应给浏览器。浏览器的 URL 地址仍然是 A 。</p>
+</li>
+<li><p><strong>重定向（Redirect）</strong></p>
+<p> 客户端（浏览器）向服务器 A 发送一个 URL 请求，服务器 A 告知浏览器资源在服务器 B，浏览器会重新发送请求到服务器 B。浏览器的 URL 地址切换为 B。</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求转发</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">type</span> <span class="operator">=</span> <span class="string">&#x27;forward&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;forward:/test2?type=&quot;</span> + type;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重定向</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test2</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">type</span> <span class="operator">=</span> <span class="string">&#x27;redirect&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/test2?type=&quot;</span> + type;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在拦截器中，常通过修改 HttpSevletRequest 对象实现请求转发。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getRequestDispatcher(<span class="string">&quot;login&quot;</span>).forward(request,response);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Controller-配置"><a href="#Controller-配置" class="headerlink" title="Controller 配置"></a>Controller 配置</h2><p>Spring 的 WebMvcConfigurer 接口定义了 Controller 层配置信息（默认为空实现）。</p>
+<p>开发者可以通过实现 WebMvcConfigurer 接口或继承 WebMvcConfigurationSupport 类对以下方法进行重写。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebMVCConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 解决跨域问题 **/</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addCorsMappings</span><span class="params">(CorsRegistry registry)</span>&#123;&#125;;</span><br><span class="line">    <span class="comment">/** 添加拦截器 **/</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="跨域问题"><a href="#跨域问题" class="headerlink" title="跨域问题"></a>跨域问题</h3><p>配置如何处理跨域请求，否则返回数据会被浏览器拦截。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> &#123;</span><br><span class="line">            <span class="comment">// 添加映射路径（全部）</span></span><br><span class="line">    registry.addMapping(<span class="string">&quot;/**&quot;</span>)</span><br><span class="line">            <span class="comment">// 放行哪些原始域</span></span><br><span class="line">            .allowedOrigins(<span class="string">&quot;*&quot;</span>)</span><br><span class="line">            <span class="comment">// 是否发送 Cookie 信息</span></span><br><span class="line">            .allowCredentials(<span class="literal">true</span>)</span><br><span class="line">            <span class="comment">// 放行哪些原始域(请求方式)</span></span><br><span class="line">            .allowedMethods(<span class="string">&quot;GET&quot;</span>,<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;PUT&quot;</span>, <span class="string">&quot;DELETE&quot;</span>)</span><br><span class="line">            <span class="comment">// 放行哪些原始域(头部信息)</span></span><br><span class="line">            .allowedHeaders(<span class="string">&quot;*&quot;</span>)</span><br><span class="line">            <span class="comment">// 暴露哪些头部信息</span></span><br><span class="line">            .exposedHeaders(<span class="string">&quot;Header1&quot;</span>, <span class="string">&quot;Header2&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>局部跨域</strong></p>
+<ol>
+<li><code>@CrossOrigin</code> 注解：在方法上（@RequestMapping）或者在控制器（@Controller）上使用，可以实现局部跨域。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/hello&quot;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@CrossOrigin(&quot;http://localhost:8080&quot;)</span> </span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">index</span><span class="params">( )</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 HttpServletResponse 对象添加响应头实现局部跨域。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/hello&quot;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">index</span><span class="params">(HttpServletResponse response)</span>&#123;</span><br><span class="line">    response.addHeader(<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>, <span class="string">&quot;http://localhost:8080&quot;</span>);         <span class="comment">// 指定端口放行</span></span><br><span class="line">    <span class="comment">// response.addHeader(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;);                             全部放行</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="拦截器-amp-过滤器"><a href="#拦截器-amp-过滤器" class="headerlink" title="拦截器 &amp; 过滤器"></a>拦截器 &amp; 过滤器</h3><ul>
+<li><strong>拦截器(Interceptor)</strong></li>
+</ul>
+<p>Java Web 中，在执行 Controller 方法前后对 Controller 请求进行拦截和处理。依赖于 web 框架，在 Spring 配置。在实现上基于 Java 的反射机制。</p>
+<ul>
+<li><strong>过滤器(Filter)</strong></li>
+</ul>
+<p>Java Web 中，在 request/response 传入 Servlet 前，过滤信息或设置参数。依赖于 servlet 容器，在 web.xml 配置。在实现上基于函数回调。</p>
+<blockquote>
+<p>两者常用于修改字符编码、删除无用参数、登录校验等。Spring 框架中优先使用拦截器：功能接近、使用更加灵活。</p>
+</blockquote>
+<p>拦截器配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在配置中引入拦截器对象（单独编写拦截器类）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">    <span class="comment">// 导入拦截器对象，默认拦截全部</span></span><br><span class="line">    <span class="type">InterceptorRegistration</span> <span class="variable">addInterceptor</span> <span class="operator">=</span> registry.addInterceptor(<span class="keyword">new</span> <span class="title class_">myInterceptor</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 排除配置</span></span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/error&quot;</span>,<span class="string">&quot;/login&quot;</span>,<span class="string">&quot;/user/login&quot;</span>);               </span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/asserts/**&quot;</span>);                       </span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/webjars/**&quot;</span>);</span><br><span class="line">    addInterceptor.excludePathPatterns(<span class="string">&quot;/public/**&quot;</span>);</span><br><span class="line">    <span class="comment">// 拦截配置</span></span><br><span class="line">    addInterceptor.addPathPatterns(<span class="string">&quot;/**&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拦截器类通过实现 HandlerInterceptor 接口或者继承 HandlerInterceptorAdapter 类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义拦截器</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">myInterceptor</span> <span class="keyword">extends</span> <span class="title class_">HandlerInterceptorAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Session key</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">SESSION_KEY</span> <span class="operator">=</span> <span class="string">&quot;user&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// preHandle 预处理</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 检查 session</span></span><br><span class="line">        <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> request.getSession();</span><br><span class="line">        <span class="keyword">if</span> (session.getAttribute(SESSION_KEY) != <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// 重定向到登录页面</span></span><br><span class="line">        request.setAttribute(<span class="string">&quot;message&quot;</span>,<span class="string">&quot;登录失败，请先输入用户名和密码。&quot;</span>);</span><br><span class="line">        request.getRequestDispatcher(<span class="string">&quot;login&quot;</span>).forward(request,response);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// postHandle 善后处理</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler,</span></span><br><span class="line"><span class="params">                           ModelAndView modelAndView)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;INTERCEPTOR POSTHANDLE CALLED&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过滤器类通过继承 Filter 类实现，直接添加注解即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>                                                                <span class="comment">// 作为组件，交给容器处理</span></span><br><span class="line"><span class="meta">@ServletComponentScan</span>                                                     <span class="comment">// 扫描组件</span></span><br><span class="line"><span class="meta">@WebFilter(urlPatterns = &quot;/login/*&quot;,filterName = &quot;loginFilter&quot;)</span>           <span class="comment">// 设定过滤路径和名称</span></span><br><span class="line"><span class="meta">@Order(1)</span>                                                                 <span class="comment">// 设定优先级（值小会优先执行）</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        <span class="comment">// 过滤器前执行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;before&quot;</span>);</span><br><span class="line">        <span class="comment">// 执行内部逻辑</span></span><br><span class="line">        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">        <span class="comment">// 过滤器后执行</span></span><br><span class="line">        System.out.println(<span class="string">&quot;after&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>调用顺序</strong></p>
+<p><img src="filter.png" alt="filter"></p>
+<hr>
+<h3 id="Spring-Boot配置HTTPS"><a href="#Spring-Boot配置HTTPS" class="headerlink" title="Spring Boot配置HTTPS"></a>Spring Boot配置HTTPS</h3><p>####生成SSL证书</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/benwu/articles/4891758.html">https://www.cnblogs.com/benwu/articles/4891758.html</a></p>
+<p>JDK提供证书管理工具: JDK\bin\keytool.exe </p>
+<p><font size =2 color = green>Tomcat使用Java提供的密码库，通过Java的Keytool工具生成JKS等格式的证书文件。<br>Apache使用OpenSSL提供的密码库，生成PEM、KEY、CRT等格式的证书文件。</font></p>
+<p><strong>cmd命令(JDK\bin目录打开)</strong></p>
+<p>密钥库: 保存密钥和对应的证书。【证书只含有公钥】</p>
+<p><font size =2 color = blond>genkeypair 生成密钥对（非对称加密算法）<br>genseckey 生成密钥（对称加密算法）<br></font><br>创建名为tomcat的密钥对以及自签名的证书，放入mykeystore密钥库中（不存在则创建）<br><code>keytool -genkeypair -alias &quot;tomcat&quot; -keyalg &quot;RSA&quot; -validity 180 -keypass &quot;123456&quot; -keystore &quot;D:\mykeystore.keystore&quot; -storetype PKCS12 -storepass </code></p>
+<ul>
+<li>alias 证书别名</li>
+<li>keyalg 加密算法，生成密钥对默认RSA</li>
+<li>keysize 密钥键长，RSA默认2048</li>
+<li>validity 证书有效期，默认90</li>
+<li>keypass 证书密码</li>
+<li>keystore 密钥库路径，默认创建在用户目录下</li>
+<li>storetype 密钥库类型，默认JKS</li>
+<li>storepass 密钥库密码</li>
+</ul>
+<p>查看密钥库<br><code>keytool -list -v -alias tomcat -keystore &quot;D:\mykeystore.keystore&quot; -storepass 123456 </code></p>
+<p>将生成的证书文件拷贝到项目resources目录下</p>
+<p>####修改全局配置文件</p>
+<p>application.properties格式</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span> = <span class="string">8443</span></span><br><span class="line"><span class="attr">server.ssl.key-store</span> = <span class="string">classpath:mykeystore.keystore</span></span><br><span class="line"><span class="attr">server.ssl.key-store-password</span> = <span class="string">123456</span></span><br><span class="line"><span class="attr">server.ssl.keyStoreType</span> = <span class="string">PKCS12</span></span><br><span class="line"><span class="attr">server.ssl.keyAlias</span> = <span class="string">tomcat</span></span><br></pre></td></tr></table></figure>
+
+<p>设置SSL后，默认使用HTTPS协议。访问localhost:8443，会出现证书安全提示，强行进入即可。<br><font size =2 color = brown>【未付费注册，不被数字认证机构CA认可：会被浏览器标记为不安全】</font></p>
+<p>如果将服务器端口号设置成443端口,即https的默认访问端口,那么在进行https访问的时候可以不带端口号直接访问。</p>
+<p><strong>修改入口文件</strong></p>
+<p>如果访问<a href="http://localhost:8443，则提示需要TLS。">http://localhost:8443，则提示需要TLS。</a></p>
+<p>》》将http连接自动转换为https连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestSslApplication</span> &#123;</span><br><span class="line">    <span class="comment">//servlet容器，自己写的bean会覆盖自动配置的bean？</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> ServletWebServerFactory <span class="title function_">servletContainer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">TomcatServletWebServerFactory</span> <span class="variable">tomcat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TomcatServletWebServerFactory</span>();</span><br><span class="line">        tomcat.addAdditionalTomcatConnectors(createStandardConnector());</span><br><span class="line">        <span class="keyword">return</span> tomcat;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">　　<span class="comment">// 新建connecter监听80端口，并重定向至8443</span></span><br><span class="line">    <span class="keyword">private</span> Connector <span class="title function_">createStandardConnector</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Connector</span> <span class="variable">connector</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Connector</span>(<span class="string">&quot;org.apache.coyote.http11.Http11NioProtocol&quot;</span>);</span><br><span class="line">        connector.setScheme(<span class="string">&quot;http&quot;</span>);</span><br><span class="line">        connector.setPort(<span class="number">80</span>);</span><br><span class="line">        connector.setSecure(<span class="literal">false</span>);</span><br><span class="line">        connector.setRedirectPort(<span class="number">8443</span>);</span><br><span class="line">        <span class="keyword">return</span> connector;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>重新配置Servlet容器(Tomcat)</p>
+<p>自动配置类ServletWebServerFactoryAutoConfiguration会读取bean</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/017a7f40efff">https://www.jianshu.com/p/017a7f40efff</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/javaee/spring/SpringController/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javaee/" rel="tag">javaee</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/javaee/spring/SpringBootService/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Spring Boot
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/javaee/spring/SpringSecurity/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Spring Security</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>消息队列 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-其它/分布式/消息队列"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  消息队列
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%88%86%E5%B8%83%E5%BC%8F/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a> / <a class="article-category-link" href="/categories/%E5%85%B6%E5%AE%83/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="消息系统之-Kafka"><a href="#消息系统之-Kafka" class="headerlink" title="消息系统之 Kafka"></a>消息系统之 Kafka</h1><hr>
+<h2 id="什么是消息系统"><a href="#什么是消息系统" class="headerlink" title="什么是消息系统"></a>什么是消息系统</h2><p>消息系统是专用的中间件，负责将数据从一个应用传递到另外一个应用。使应用只需关注于数据，无需关注数据在两个或多个应用间是如何传递的。</p>
+<p>消息系统一般基于可靠的消息队列来实现，使用点对点模式或发布订阅模式。数据实时在消息系统中传递，被看作流。</p>
+<hr>
+<h2 id="为什么使用消息系统"><a href="#为什么使用消息系统" class="headerlink" title="为什么使用消息系统"></a>为什么使用消息系统</h2><p>使用消息系统具有以下优势：</p>
+<ol>
+<li><strong>解耦</strong>：发送方和接收方统一使用消息系统提供的接口进行通信，易修改易扩展。</li>
+<li><strong>持久化</strong>：传递过程中消息存储到本地磁盘，防止处理数据失败导致数据丢失。</li>
+<li><strong>均衡负载</strong>：分布式系统能根据负载灵活调整机器数量，能够处理高吞吐量和流量突增的情况。</li>
+</ol>
+<p>除此之外，消息系统还可以保障：</p>
+<ol start="4">
+<li><strong>保障有序</strong>：数据处理的顺序不被打乱。</li>
+<li><strong>传递加速</strong>：通过缓冲层控制和优化数据流经过系统的速度。</li>
+<li><strong>延时处理</strong>：提供了异步处理机制，允许用户把消息放入队列，但并不立即处理它。</li>
+</ol>
+<hr>
+<h2 id="什么是-Kafka"><a href="#什么是-Kafka" class="headerlink" title="什么是 Kafka"></a>什么是 Kafka</h2><p>Kafka 作为当前最常用的消息系统之一，一般用于日志收集的离线系统。采用发布订阅模式，由通过高性能 TCP 网络协议进行通信的服务器和客户端组成。</p>
+<p>Kafka 使用 scala 开发，由 LinkedIn 开源，目前已捐献给 Apache 基金会。</p>
+<blockquote>
+<p>Kafka 官网 <a target="_blank" rel="noopener" href="http://kafka.apache.org/">http://Kafka.apache.org/</a></p>
+</blockquote>
+<hr>
+<h2 id="Kafka-的优劣势"><a href="#Kafka-的优劣势" class="headerlink" title="Kafka 的优劣势"></a>Kafka 的优劣势</h2><p><strong>优势</strong></p>
+<ol>
+<li>快速持久化，可以在O(1)的系统开销下进行消息持久化；</li>
+<li>IO 吞吐量高，使用 partition 把队列流量均匀分散在多台机器上，单台服务器可以达到 10W/s 的吞吐速率。</li>
+</ol>
+<p><strong>劣势</strong></p>
+<ol>
+<li>不进行消息重复性检查，可能导致消费重复数据或者异常情况下的数据丢失。</li>
+<li>实时性方面也存在少量延迟。</li>
+</ol>
+<hr>
+<h2 id="生产者-消费者模式"><a href="#生产者-消费者模式" class="headerlink" title="生产者/消费者模式"></a>生产者/消费者模式</h2><p>Kafka 是一个分布式系统，由服务器和客户端组成，之间通过高性能 TCP 网络协议进行通信。</p>
+<ol>
+<li><p>服务器以 <code>Cluster</code> 为单位向外提供服务，由多个 <code>Broker</code> 组成。Broker 作为 Kafka 的服务节点，接收外部生产的数据，在本地磁盘对数据进行备份，并提供数据给指定的接收者。</p>
+</li>
+<li><p>客户端分为以下两种类型：</p>
+<ul>
+<li><code>Producer</code>: 数据生产者，向 Kafka 集群生产数据。</li>
+<li><code>Consumer</code>：数据消费者，读取 Kafka 集群生产者生产的消息。</li>
+</ul>
+</li>
+<li><p>组件之间通过 <code>Zookeeper</code> 进行协调。ZooKeeper 会保存 Broker 和 Consumer 的元数据信息，并进行数据变更的监控。并负责选举出 Cluster 内的 Controller （其中一个 Broker），管理 Zookeeper 上的元数据信息。</p>
+</li>
+</ol>
+<hr>
+<h2 id="数据分片模型"><a href="#数据分片模型" class="headerlink" title="数据分片模型"></a>数据分片模型</h2><p>Kafka 消息按照 <code>Topic</code> 进行数据的组织和隔离，Producer/Consumer 会向指定的 Topic 收发数据。</p>
+<p>在服务器端，Topic 则按 <code>Patition</code> 进行分区，同一个 Topic 的 Partition 会散落在多个 Broker 上，存储为一个阻塞队列，从而达到了数据分布式存储的目的。Producer 可以指定发送的 Partition 以保证消息有序到达。</p>
+<p><img src="Kafka.jpeg" alt="Kafka"></p>
+<p>每个 <code>Consumer Group</code> 都会消费一个 Topic 全量的数据，彼此之间互不干扰。同一个 Consumer Group 下的 Consumer 只能消费到其中一部分 Partition ，通过多个 Consumer 可以达到并行消费的目的。Partition 数量推荐设为 Consumer 数量的整数倍，便于均分。</p>
+<p><img src="group.jpeg" alt="group"></p>
+<hr>
+<h2 id="多副本模型"><a href="#多副本模型" class="headerlink" title="多副本模型"></a>多副本模型</h2><p>为了提高可用性，避免 Broker 损坏导致的 Partition 不可用或者丢失问题，Kafka 会对每个 Partition 提供多个副本（默认为 3 个），其中有且仅有一个作为 <code>Leader</code>，负责数据的读写。其他副本 <code>Follower</code> 将存放在不同的 Broker 上，通过接收 Leader 广播将数据同步到本地。</p>
+<p>每个 Leader Partition 维护一个独立的 <code>ISR</code> 列表，记录当前同步的 Follower 集合：</p>
+<ol>
+<li>如果 Follower 不能及时同步（延迟时间高或延迟条数超过阈值）就会被暂时踢出 ISR 。</li>
+<li>如果 Leader 不可用将从 ISR 中选出一个 Follower 担任 Leader 。</li>
+</ol>
+<hr>
+<h2 id="消息定位"><a href="#消息定位" class="headerlink" title="消息定位"></a>消息定位</h2><h3 id="定位方式"><a href="#定位方式" class="headerlink" title="定位方式"></a>定位方式</h3><p>kafka 用 <code>Offset</code> 表示 Message 在 Partition 中的偏移量，通过 Offset 可以唯一确定 Partition 中的一条 Message 。</p>
+<ol>
+<li><strong>生产者 Offset (current position)</strong></li>
+</ol>
+<p>每个 Partition 只有一个，表示当前消息生产到的位置。</p>
+<ol start="2">
+<li><strong>消费者 Offset (committed offset)</strong> </li>
+</ol>
+<p>每个 Partition 可以有多个，取决于消费的 ConsumeGroup 数量。消费者 Offset 会记录到 Kafka 自带 Topic(__consumer_offsets) 内，表示当前消费到的位置。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Group</td>
+<td>消费者组</td>
+</tr>
+<tr>
+<td>Topic</td>
+<td>topic 名称</td>
+</tr>
+<tr>
+<td>Pid</td>
+<td>partition ID</td>
+</tr>
+<tr>
+<td>Offset</td>
+<td>消费者在对应分区上已消费消息数</td>
+</tr>
+<tr>
+<td>logSize</td>
+<td>已经写到该分区的消息数</td>
+</tr>
+<tr>
+<td>Lag</td>
+<td>还有多少消息未读取（Lag = logSize - Offset）</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>分区所属 broker</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="搭建-Broker"><a href="#搭建-Broker" class="headerlink" title="搭建 Broker"></a>搭建 Broker</h2><p>在服务器搭建 Broker ，需要通过指令来完成。本文所有的操作都是在MacOS系统上使用。如果是在Linux操作系统下进行实验，使用的命令是相同的；如果是在windows操作系统下进行实验，则需要使用对应的bin/windows目录下的bat文件。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最大offset</span></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic test_topic --time -1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最小offset</span></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic test_topic --time -2</span><br><span class="line"></span><br><span class="line"><span class="comment"># offset</span></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic test_topic</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前 kafka 所有的 topic</span></span><br><span class="line">bin/kafka-topics.sh --zookeeper localhost:2181 --list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 topic</span></span><br><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic test_topic --replication-factor 1 --partitions 1 </span><br><span class="line"></span><br><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic test_topic --replication-factor 3 --partitions 10 --config cleanup.policy=compact</span><br><span class="line"></span><br><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:2181  --topic test_topic --partitions 1   --replication-factor 1 --config max.message.bytes=64000 --config flush.messages=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看某 topic 具体情况</span></span><br><span class="line">bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test_topic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改 topic （分区数、特殊配置如compact属性、数据保留时间等）</span></span><br><span class="line">bin/kafka-topics.sh --zookeeper localhost:2181 --alter --partitions 3  --config cleanup.policy=compact --topic test_topic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改 topic （也可以用这种）</span></span><br><span class="line">bin/kafka-configs.sh --alter --zookeeper localhost:2181 --entity-name test_topic --entity-type topics --add-config cleanup.policy=compact</span><br><span class="line"> </span><br><span class="line">bin/kafka-configs.sh --alter --zookeeper localhost:2181 --entity-name test_topic --entity-type topics --delete-config cleanup.policy</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="JAVA-生产信息"><a href="#JAVA-生产信息" class="headerlink" title="JAVA 生产信息"></a>JAVA 生产信息</h2><h3 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 导入 0.10.2 版本 Kafka --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.Kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>Kafka-clients<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.10.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置生产者"><a href="#配置生产者" class="headerlink" title="配置生产者"></a>配置生产者</h3><p>在创建 Producer 对象前，必须配置以下属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bootstrap.servers</code></td>
+<td>Kafka broker 地址</td>
+<td>如果有多个地址用逗号分割</td>
+</tr>
+<tr>
+<td><code>key.serializer</code></td>
+<td>key 的序列化类</td>
+<td>必须实现 Kafka 的 Serializer 接口</td>
+</tr>
+<tr>
+<td><code>value.serializer</code></td>
+<td>value 的序列化类</td>
+<td>必须实现 Kafka 的 Serializer 接口</td>
+</tr>
+</tbody></table>
+<p>开发者还可以选择配置如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>request.required.acks</code></td>
+<td>指定消息系统何时向生产者返回 ACK ： <code>0</code> 不需要、 <code>1</code> 主服务器收到后、 <code>-1</code> 所有服务器收到后。</td>
+<td>选择不接收 ACK 时生产者能以最大速度发送消息，但如果 broker 没有收到消息，生产者将无感知。</td>
+</tr>
+<tr>
+<td><code>producer.type</code></td>
+<td>同步发送消息 <code>sync</code> 或异步发送消息 <code>async</code> 。</td>
+<td>异步发送消息会被服务器暂存在一个阻塞队列中，被消费者拉取时再由线程取出并组装。</td>
+</tr>
+</tbody></table>
+<p>通过读取配置，即可生成 Producer 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Properties</span> <span class="variable">KafkaProps</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">KafkaProps.put(<span class="string">&quot;bootstrap.servers&quot;</span>, <span class="string">&quot;broker1:port1, broker2:port2&quot;</span>);</span><br><span class="line">KafkaProps.put(<span class="string">&quot;key.serializer&quot;</span>, <span class="string">&quot;org.apache.Kafka.common.StringSerializer&quot;</span>);</span><br><span class="line">KafkaProps.put(<span class="string">&quot;value.serializer&quot;</span>, <span class="string">&quot;org.apache.Kafka.common.StringSerializer&quot;</span>);</span><br><span class="line">producer = <span class="keyword">new</span> <span class="title class_">KafkaProducer</span>&lt;String, String&gt;(KafkaProps);</span><br></pre></td></tr></table></figure>
+
+<h3 id="构造消息"><a href="#构造消息" class="headerlink" title="构造消息"></a>构造消息</h3><p>实例化 ProducerRecord 类得到消息对象。</p>
+<p>创建时必须指定消息所属 Topic 和消息值 Value 。消息发往哪个 Partition 通常由负载均衡机制随机选择。若指定了 Partition 则发送到指定的 Partition，如果没有指定 Partition 但指定了 Key，则由 hasy(key) 决定。</p>
+<p>由于 Kafka 只能保证 Partition 内消息的有序性，如果需要保证消息有序到达，Producer 必须指定消息到达的 Partition ，这些消息最终只能被 ConsumeGroup 内的一个 Consumer 消费。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 三种构造方法</span></span><br><span class="line">ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> <span class="title class_">ProducerRecord</span>&lt;&gt;(topic, value);</span><br><span class="line">ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> <span class="title class_">ProducerRecord</span>&lt;&gt;(topic, key, value);</span><br><span class="line">ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> <span class="title class_">ProducerRecord</span>&lt;&gt;(topic, partition, key, value);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送给消息系统</span></span><br><span class="line">producer.send(record);</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="接收-ACK"><a href="#接收-ACK" class="headerlink" title="接收 ACK"></a>接收 ACK</h3><p>发送消息后，生产者有两种方式接收消息系统返回的 ACK :</p>
+<ol>
+<li>通过返回的 Future 判断已经发送成功，get 方法会阻塞线程。实现同步等待。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">Future</span> <span class="variable">future</span> <span class="operator">=</span> producer.send(record); </span><br><span class="line">    future.get(<span class="number">10000</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (TimeoutException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<ol start="2">
+<li>发送消息时传递一个回调对象，实现 Kafka 的 Callback 接口，通过回调判断是否发送成功。实现异步等待。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">producer.send(record, <span class="keyword">new</span> <span class="title class_">ProducerCallback</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ProducerCallback</span> <span class="keyword">implements</span> <span class="title class_">Callback</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCompletion</span><span class="params">(RecordMetadata recordMetadata, Exception e)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="literal">null</span>)  e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+
+<h3 id="生产示例"><a href="#生产示例" class="headerlink" title="生产示例"></a>生产示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.producer.KafkaProducer;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.producer.ProducerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.producer.ProducerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.common.serialization.StringSerializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Producer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">topic</span> <span class="operator">=</span> <span class="string">&quot;test&quot;</span>; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;192.168.23.76:9092,192.168.23.77:9092&quot;</span>);          </span><br><span class="line">        p.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);       </span><br><span class="line">        p.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);    </span><br><span class="line">        p.put(<span class="string">&quot;request.required.acks&quot;</span>, <span class="string">&quot;-1&quot;</span>);                        </span><br><span class="line">        p.put(<span class="string">&quot;producer.type&quot;</span>, <span class="string">&quot;async&quot;</span>);         </span><br><span class="line"></span><br><span class="line">        KafkaProducer&lt;String, String&gt; KafkaProducer = <span class="keyword">new</span> <span class="title class_">KafkaProducer</span>&lt;&gt;(p);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> <span class="string">&quot;Hello,&quot;</span> + i;</span><br><span class="line">                ProducerRecord&lt;String, String&gt; record = <span class="keyword">new</span> <span class="title class_">ProducerRecord</span>&lt;String, String&gt;(topic, msg);   </span><br><span class="line">                KafkaProducer.send(record);                                  </span><br><span class="line">                Thread.sleep(<span class="number">500</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            KafkaProducer.close();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="JAVA-消费消息"><a href="#JAVA-消费消息" class="headerlink" title="JAVA 消费消息"></a>JAVA 消费消息</h2><h3 id="导入依赖-1"><a href="#导入依赖-1" class="headerlink" title="导入依赖"></a>导入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 导入 0.10.2 版本 Kafka --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.Kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>Kafka-clients<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.10.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="配置消费者"><a href="#配置消费者" class="headerlink" title="配置消费者"></a>配置消费者</h3><p>在创建 Consumer 对象前，必须配置以下属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bootstrap.servers</code></td>
+<td>Kafka broker 地址</td>
+<td>如果有多个地址用逗号分割</td>
+</tr>
+<tr>
+<td><code>group.id</code></td>
+<td>所属消费组</td>
+<td></td>
+</tr>
+<tr>
+<td><code>key.deserializer</code></td>
+<td>key 的反序列化类</td>
+<td>必须实现 Kafka 的 Serializer 接口</td>
+</tr>
+<tr>
+<td><code>value.deserializer</code></td>
+<td>value 的反序列化类</td>
+<td>必须实现 Kafka 的 Serializer 接口</td>
+</tr>
+</tbody></table>
+<p>开发者还可以选择配置如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fetch.max.bytes</code></td>
+<td>consumer 端一次拉取数据的最大字节数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>fetch.min.bytes</code></td>
+<td>consumer 端一次拉取数据的最大字节数，默认为 1B。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>max.poll.records</code></td>
+<td>consumer 端一次拉取数据的最大条数，默认为 500。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>fetch.max.wait.ms</code></td>
+<td>服务器最大等待时间，默认为 500ms。超过时间后返回所有可用数据。</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>通过读取配置，即可生成 Consumer 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Properties</span> <span class="variable">kafkaProps</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">kafkaProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;192.168.23.76:9092&quot;</span>);                           </span><br><span class="line">kafkaProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);                 </span><br><span class="line">kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);                     </span><br><span class="line">kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;duanjt_test&quot;</span>);                                           </span><br><span class="line">KafkaConsumer&lt;String, String&gt; KafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(kafkaProps);</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="订阅消息"><a href="#订阅消息" class="headerlink" title="订阅消息"></a>订阅消息</h3><p>消费者可以通过以下两种方式订阅 Topic：</p>
+<ol>
+<li>subscribe 方法：动态调整组内各个消费者与分区的关系，实现负载均衡。</li>
+<li>assign 方法：订阅确定的主题和分区。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 订阅</span></span><br><span class="line">consumer.subscribe(Collections.singletonList(Producer.topic));</span><br><span class="line">consumer.assign(Collections.singletonList(<span class="keyword">new</span> <span class="title class_">TopicPartition</span>(partitionInfo.topic(), partitionInfo.partition())));</span><br><span class="line"><span class="comment">// 解除订阅</span></span><br><span class="line">consumer.unsubscribe();</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="拉取消息"><a href="#拉取消息" class="headerlink" title="拉取消息"></a>拉取消息</h3><p>Kafka Consumer 采用主动拉取消息系统数据 poll 的方式进行消费，可以对服务器的数据进行延迟处理。以防止消息系统向 Consumer 推送数据过多，导致 Consumer 积压而不堪重负的情况。为避免在服务器无数据的时候一直轮询， Kafka 在 poll 方法有参数允许消费者请求在长轮询中阻塞，等待数据到达。</p>
+<p>获取到消息组 ConsumerRecords 后，内部包含多个 ConsumerRecord 对象，记录消息的 topic/partition/offset/key/value 信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每隔 1s 拉取一次数据</span></span><br><span class="line">ConsumerRecords&lt;String, String&gt; records = KafkaConsumer.poll(<span class="number">1000</span>);</span><br><span class="line"><span class="comment">// 打印数据</span></span><br><span class="line">records.foreach(record -&gt; &#123;</span><br><span class="line">    System.out.println(String.format(<span class="string">&quot;topic:%s,offset:%d,消息:%s&quot;</span>, record.topic(), record.offset(), record.value()));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="提交-Offset"><a href="#提交-Offset" class="headerlink" title="提交 Offset"></a>提交 Offset</h3><p>对于消费者而言，异步模式下 committed offset 是落后于 current position 的。如果 consumer 挂掉，那么下一次消费数据又只会从 committed offset 的位置拉取数据，就会导致数据被重复消费。</p>
+<p>消费者 offset 更新有以下两种方式：</p>
+<ol>
+<li><strong>自动提交 at-most-once</strong></li>
+</ol>
+<p>设置 enable.auto.commit=true（默认），更新的频率根据参数 auto.commit.interval.ms 来定，定时系统会根据当时 Consumer 收到的消息数量自动更新 offset 。</p>
+<p>这可能导致两个问题：</p>
+<ol>
+<li><p>Consumer 程序崩溃，而 Offset 尚未更新。会重复消费部分数据。</p>
+</li>
+<li><p>Consumer 程序崩溃，但 Offset 已被更新。已收到但未消费的数据永久丢失。</p>
+</li>
+<li><p><strong>手动提交 at-least-once</strong></p>
+</li>
+</ol>
+<p>设置 enable.auto.commit=false，Consumer 收到消息并消费后，再调用方法 consumer.commitSync() 手动更新 offset 。</p>
+<p>如果消费失败，则 offset 也不会更新，此条消息会被重复消费。</p>
+<h3 id="消费示例"><a href="#消费示例" class="headerlink" title="消费示例"></a>消费示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.consumer.ConsumerConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.consumer.ConsumerRecord;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.consumer.ConsumerRecords;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.clients.consumer.KafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.Kafka.common.serialization.StringDeserializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Consumer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">&quot;192.168.23.76:9092&quot;</span>);                           </span><br><span class="line">        p.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);                 </span><br><span class="line">        p.put(ConsumerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringDeserializer.class);                     </span><br><span class="line">        p.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">&quot;duanjt_test&quot;</span>);                                           </span><br><span class="line"></span><br><span class="line">        KafkaConsumer&lt;String, String&gt; KafkaConsumer = <span class="keyword">new</span> <span class="title class_">KafkaConsumer</span>&lt;String, String&gt;(p);</span><br><span class="line">        KafkaConsumer.subscribe(Collections.singletonList(<span class="string">&quot;test&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; records = KafkaConsumer.poll(<span class="number">100</span>);</span><br><span class="line">            records.foreach(record -&gt; &#123;</span><br><span class="line">                System.out.println(String.format(<span class="string">&quot;topic:%s,offset:%d,消息:%s&quot;</span>, record.topic(), record.offset(), record.value()));</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<p>美团技术博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lizhitao/article/details/39499283">https://blog.csdn.net/lizhitao/article/details/39499283</a></p>
+<p>常用指令一：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/itwild/p/12287850.html">https://www.cnblogs.com/itwild/p/12287850.html</a></p>
+<p>常用指令二：<a target="_blank" rel="noopener" href="https://blog.csdn.net/camel84/article/details/81879118">https://blog.csdn.net/camel84/article/details/81879118</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E5%85%B6%E5%AE%83/%E5%88%86%E5%B8%83%E5%BC%8F/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B6%E5%AE%83/" rel="tag">其它</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            微服务
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E5%88%86%E5%B8%83%E5%BC%8F/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%972/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">消息队列2</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

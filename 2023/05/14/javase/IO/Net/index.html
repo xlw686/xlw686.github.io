@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Java Net |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-javase/IO/Net"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java Net
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/javase/IO/Net/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javase/">javase</a> / <a class="article-category-link" href="/categories/javase/I-O/">I/O</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Java-Net"><a href="#Java-Net" class="headerlink" title="Java Net"></a>Java Net</h1><p>java.net 文件夹内提供了 Java 程序中网络通信使用的类，使用时需要进行导入。    </p>
+<hr>
+<h2 id="HTTP通信"><a href="#HTTP通信" class="headerlink" title="HTTP通信"></a>HTTP通信</h2><h3 id="URL-类"><a href="#URL-类" class="headerlink" title="URL 类"></a>URL 类</h3><ul>
+<li><p><strong>URL 类</strong>：用于定向资源所在位置，资源由 URLConnection 类读取。</p>
+</li>
+<li><p><strong>URLConnection 类</strong>：用于读取和写入 URL 类定向的资源，在 HTTP 通信中常用 HttpURLConnection 子类。</p>
+</li>
+</ul>
+<p>在 HTTP 通信中通常需要执行以下五个过程。</p>
+<ol>
+<li>创建连接对象。</li>
+<li>设置连接参数和请求属性。</li>
+<li>建立连接，输出流发送请求。 </li>
+<li>输入流读取返回内容。</li>
+<li>关闭连接。</li>
+</ol>
+<h3 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h3><h4 id="创建连接"><a href="#创建连接" class="headerlink" title="创建连接"></a>创建连接</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 URL 对象，如果 url 格式错误则抛出 IOException</span></span><br><span class="line"><span class="type">URL</span> <span class="variable">myUrl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://www.baidu.com&quot;</span>);                   </span><br><span class="line"><span class="comment">// 创建 URLConnection 对象，读取 URL 资源</span></span><br><span class="line"><span class="type">HttpURLConnection</span> <span class="variable">myCon</span> <span class="operator">=</span> (HttpURLConnection)myUrl.openConnetcion();</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="配置连接"><a href="#配置连接" class="headerlink" title="配置连接"></a>配置连接</h4><p><strong>设置连接参数</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">myCon.setRequestMethod(<span class="string">&quot;POST&quot;</span>);               <span class="comment">// 设置连接方法，默认使用 GET</span></span><br><span class="line">myCon.setDoInput(<span class="literal">true</span>);                       <span class="comment">// （默认）允许进行字符流输入，执行 read 操作</span></span><br><span class="line">myCon.setDoOutput(<span class="literal">true</span>);                      <span class="comment">// （默认）允许进行字符流输出，执行 write 操作</span></span><br><span class="line">myCon.setUseCaches(<span class="literal">false</span>);                    <span class="comment">// 设置是否使用缓存</span></span><br><span class="line">myCon.setConnectTimeout(<span class="number">1000</span>);                 <span class="comment">// 设置最长建立连接时间，超时抛出 SocketTimeoutException</span></span><br><span class="line">myCon.setReadTimeout(<span class="number">1000</span>);                 <span class="comment">// 设置最长数据读取时间，超时抛出 SocketTimeoutException</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>设置请求属性</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置版本</span></span><br><span class="line">myCon.setRequestProperty(<span class="string">&quot;version&quot;</span>, <span class="string">&quot;1.2.3&quot;</span>);         </span><br><span class="line"><span class="comment">// 设置浏览器类型（用于爬虫伪装）</span></span><br><span class="line">myCon.setRequestProperty(<span class="string">&quot;user-agent&quot;</span>, <span class="string">&quot;Mozilla/5.0 (compatible;  Windows NT 5.1;SV1)&quot;</span>);</span><br><span class="line"><span class="comment">// 设置发送文本类型</span></span><br><span class="line">myCon.setRequestProperty(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json;charset=utf-8&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="连接-amp-发送请求"><a href="#连接-amp-发送请求" class="headerlink" title="连接 &amp; 发送请求"></a>连接 &amp; 发送请求</h4><p>连接和发送请求有两种方式：</p>
+<ol>
+<li>调用 connect 方法，直接建立连接并发送请求。</li>
+<li>调用 getOutputStream 方法，在输出流中写入数据，在关闭输出流时自动建立连接并发送输出流请求。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">OutputStreamWriter</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(myCon.getOutputStream());</span><br><span class="line">out.write(str);            <span class="comment">// 写入数据      </span></span><br><span class="line">out.close();               <span class="comment">// 建立连接并发送请求       </span></span><br></pre></td></tr></table></figure>
+
+<h4 id="获取响应数据"><a href="#获取响应数据" class="headerlink" title="获取响应数据"></a>获取响应数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> myCon.getResponseCode();            <span class="comment">// 获取响应码</span></span><br><span class="line"><span class="type">String</span> <span class="variable">head</span> <span class="operator">=</span> myCon.getHeaderField();          <span class="comment">// 获取响应头字段</span></span><br></pre></td></tr></table></figure>
+
+<p>获取响应体数据有两种方式：</p>
+<ol>
+<li>调用 getContent 方法，直接获取响应内容。</li>
+<li>调用 getInputStream 方法，通过输入流获取响应内容。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(myCon.getInputStream()));</span><br><span class="line"><span class="keyword">while</span> ((str = in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">    System.out.println(str);</span><br><span class="line">&#125;</span><br><span class="line">in.close();</span><br><span class="line"><span class="comment">// 关闭连接</span></span><br><span class="line">myCon.disconnect();</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用范例"><a href="#使用范例" class="headerlink" title="使用范例"></a>使用范例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//示例：网络爬虫</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebCrawler</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">getHttpJson</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//配置URL</span></span><br><span class="line">            <span class="type">URL</span> <span class="variable">myUrl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://static-data.eol.cn/www/school/&quot;</span>+ i + <span class="string">&quot;/info.json&quot;</span>);</span><br><span class="line">            <span class="comment">//配置连接</span></span><br><span class="line">            <span class="type">HttpURLConnection</span> <span class="variable">myCon</span> <span class="operator">=</span> (HttpURLConnection) myUrl.openConnection();</span><br><span class="line">            myCon.setRequestProperty(<span class="string">&quot;user-agent&quot;</span>, <span class="string">&quot;Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)&quot;</span>);</span><br><span class="line">            myCon.setConnectTimeout(<span class="number">10000</span>);</span><br><span class="line">            myCon.setReadTimeout(<span class="number">1000</span>);</span><br><span class="line">            <span class="comment">//建立连接</span></span><br><span class="line">            myCon.connect();</span><br><span class="line">            <span class="comment">//如果连接成功</span></span><br><span class="line">            <span class="keyword">if</span> (myCon.getResponseCode() == <span class="number">200</span>) &#123;</span><br><span class="line">                System.out.print(<span class="string">&quot;ID&quot;</span> + i + <span class="string">&quot;的数据读取成功，数据内容：&quot;</span>);</span><br><span class="line">                <span class="comment">//读取返回数据</span></span><br><span class="line">                <span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> myCon.getInputStream();</span><br><span class="line">                <span class="type">int</span> <span class="variable">cnt</span> <span class="operator">=</span> in.available();</span><br><span class="line">                <span class="type">byte</span>[] b = <span class="keyword">new</span> <span class="title class_">byte</span>[cnt];</span><br><span class="line">                in.read(b);</span><br><span class="line">                <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(b);</span><br><span class="line">                <span class="comment">//输出返回数据</span></span><br><span class="line">                System.out.println(str);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;ID&quot;</span> + i + <span class="string">&quot;的数据读取失败，代码：&quot;</span> + myCon.getResponseCode());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;URL错误，无法查找到资源。&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span>(SocketTimeoutException e)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;ID&quot;</span> + i + <span class="string">&quot;的数据访问连接超时。&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;发送的请求存在错误，资源拒绝访问。&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="TCP通信"><a href="#TCP通信" class="headerlink" title="TCP通信"></a>TCP通信</h2><h3 id="Socket-类"><a href="#Socket-类" class="headerlink" title="Socket 类"></a>Socket 类</h3><ul>
+<li><strong>Socket 类</strong>：通过套接字指向对方通信位置，用于建立 TCP 连接。</li>
+<li><strong>ServerSocket 类</strong>：在服务器建立，绑定自身的端口号用于监听是否有用户请求。</li>
+</ul>
+<p><strong>服务器端</strong></p>
+<ol>
+<li>创建 ServerSocket 对象，绑定监听端口监听客户端请求。</li>
+<li>接收到客户端请求后，创建 Socket 与该客户建立专线连接。</li>
+<li>双方通过输入输出流进行对话。</li>
+<li>关闭流和套接字，继续等待新的连接。</li>
+</ol>
+<p><strong>客户端</strong></p>
+<ol>
+<li>创建 Socket 对象，指明需要连接的服务器地址和端口号。</li>
+<li>连接建立后，通过输出流向服务器发送请求信息。</li>
+<li>双方通过输入输出流进行对话。</li>
+<li>关闭流和套接字。</li>
+</ol>
+<h3 id="执行过程-1"><a href="#执行过程-1" class="headerlink" title="执行过程"></a>执行过程</h3><h4 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 客户端</span></span><br><span class="line"><span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">55533</span>);     <span class="comment">// 创建 Socket 对象指向服务器</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 服务器</span></span><br><span class="line"><span class="type">ServerSocket</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(<span class="number">55533</span>);      <span class="comment">// 创建 ServerSocket 对象监听接口</span></span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> server.accept();                <span class="comment">// 阻塞进程，直到接收到客户端请求返回 Socket 对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="进行对话"><a href="#进行对话" class="headerlink" title="进行对话"></a>进行对话</h4><p>输出流负责输出信息，在另一端输入流将得到输入。失败则抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//打开输出流</span></span><br><span class="line"><span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> socket.getOutputStream();</span><br><span class="line"><span class="comment">//输出信息（字节流）</span></span><br><span class="line"><span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">out.write(message.getBytes(<span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">out.write(<span class="string">&quot;end&quot;</span>);</span><br><span class="line"><span class="comment">//关闭输出流</span></span><br><span class="line">out.close();</span><br></pre></td></tr></table></figure>
+
+<p>输入流负责输入信息，得到另一端输出流信息。失败则抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//打开输入流（转化为字节流被缓冲流读取）</span></span><br><span class="line"><span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(socket.getInputStream(),<span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line"><span class="comment">//输入信息(接收到end字符则结束)</span></span><br><span class="line"><span class="type">StringBuilder</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line"><span class="keyword">while</span> ((str = in.readLine()) != <span class="literal">null</span> &amp;&amp; <span class="string">&quot;end&quot;</span>.equals(str)) &#123;</span><br><span class="line">  message.append(str);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;get message: &quot;</span> + message);</span><br><span class="line"><span class="comment">//关闭输入流</span></span><br><span class="line">in.close(); <span class="comment">//socket.shutdownOutput();</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用范例-1"><a href="#使用范例-1" class="headerlink" title="使用范例"></a>使用范例</h3><ul>
+<li><strong>客户端</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SocketClient</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">//与本地服务器端建立连接</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">host</span> <span class="operator">=</span> <span class="string">&quot;127.0.0.1&quot;</span>; </span><br><span class="line">    <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> <span class="number">55533</span>;</span><br><span class="line">    <span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(host, port);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//控制台输入并向服务器端输出</span></span><br><span class="line">    <span class="type">BufferedReader</span> <span class="variable">bufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(System.in, <span class="string">&quot;UTF-8&quot;</span>));      </span><br><span class="line">    <span class="type">BufferedWriter</span> <span class="variable">bufferedWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedWriter</span>(<span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(socket.getOutputStream()));         </span><br><span class="line">    <span class="keyword">while</span> (str != <span class="string">&quot;end&quot;</span>) &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> bufferedReader.readLine();</span><br><span class="line">      bufferedWriter.write(str + <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">      bufferedWriter.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//关闭连接</span></span><br><span class="line">    outputStream.close();</span><br><span class="line">    socket.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>服务器端</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SocketServer</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">// 监听指定的端口</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> <span class="number">55533</span>;</span><br><span class="line">    <span class="type">ServerSocket</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(port);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//循环等待请求</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">      <span class="comment">//建立连接</span></span><br><span class="line">      <span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> server.accept();</span><br><span class="line">      <span class="comment">//从socket中获取输入流并读取</span></span><br><span class="line">      <span class="type">BufferedReader</span> <span class="variable">bufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(socket.getInputStream(), <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">      String str;，</span><br><span class="line">      <span class="keyword">while</span> ((str = bufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;get message from client:&quot;</span> + str);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//关闭连接</span></span><br><span class="line">      inputStream.close();</span><br><span class="line">      socket.close();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h4><p>服务器端可以通过多线程实现伪异步，每接受一个 Socket 请求，就创建一个线程来处理它。防止程序被一个请求阻塞。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//服务器端（线程池管理）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SocketServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">// 监听指定的端口</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> <span class="number">55533</span>;</span><br><span class="line">        <span class="type">ServerSocket</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(port);</span><br><span class="line">        <span class="comment">//创建一个线程池</span></span><br><span class="line">        <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span> Executors.newFixedThreadPool(<span class="number">100</span>);</span><br><span class="line">        <span class="comment">//循环等待请求</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">//建立连接</span></span><br><span class="line">            <span class="type">Socket</span> <span class="variable">socket</span> <span class="operator">=</span> serverSocket.accept();</span><br><span class="line">            <span class="comment">//分配线程</span></span><br><span class="line">            <span class="type">Runnable</span> <span class="variable">runnable</span> <span class="operator">=</span> () -&gt; &#123;</span><br><span class="line">                <span class="type">BufferedReader</span> <span class="variable">bufferedReader</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">                <span class="comment">//从socket中获取输入流并读取</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    bufferedReader = <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(socket.getInputStream(), <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">                    String str;</span><br><span class="line">                    <span class="keyword">while</span> ((str = bufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                        System.out.println(<span class="string">&quot;get message from client:&quot;</span> + str);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">            executorService.submit(runnable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="流输入输出"><a href="#流输入输出" class="headerlink" title="流输入输出"></a>流输入输出</h4><p>在实际应用中，我们通过是采用数据长度+类型+数据的方式来告知一次流输入完成，方便进行后续操作。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33865313/article/details/79363640">https://blog.csdn.net/qq_33865313/article/details/79363640</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/huanzi-qch/p/9889521.html">https://www.cnblogs.com/huanzi-qch/p/9889521.html</a></p>
+<h3 id="WebSocket-类"><a href="#WebSocket-类" class="headerlink" title="WebSocket 类"></a>WebSocket 类</h3><p>Socket 消息推送机制中，用的都是 Ajax 轮询。在特定的时间间隔由客户端自动发出请求，将服务器的消息主动拉回来（服务器启动一个线程去监听与此客户端的通信），这种方式是非常消耗资源的，因为它本质还是 http 请求，而且显得非常笨拙：服务端不能主动向客户端推送数据。</p>
+<p><code>import javax.websocket.*;</code></p>
+<p>WebSocket 在浏览器和服务器完成一个握手的动作，在建立连接之后，服务器可以主动传送数据给客户端，客户端也可以随时向服务器发送数据。多客户端、涉及有界面的聊天建议使用websocket（嵌入到了浏览器的内核中）。</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/interdrp/p/7903736.html">https://www.cnblogs.com/interdrp/p/7903736.html</a></p>
+<p><strong>Spring框架</strong></p>
+<p>服务端：</p>
+<p> 1、添加Jar包依赖：</p>
+<p> 2、创建一个WebSocket服务端类，并添加@ServerEndpoint(value = “/websocket”)注解<br>表示将 WebSocket 服务端运行在 ws://[Server 端 IP 或域名]:[Server 端口]/项目名/websocket 的访问端点</p>
+<p> 3、实现onOpen、onClose、onMessage、onError等方法</p>
+<p>客户端</p>
+<p> 1、添加Jar包依赖：</p>
+<p> 2、创建WebSocket客户端类并继承WebSocketClient</p>
+<p> 3、实现构造器，重写onOpen、onClose、onMessage、onError等方法</p>
+<p> <strong>Maven依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.websocket<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.websocket-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javaee-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>服务器定义WebSocket类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ServerEndpoint(&quot;/websocket/&#123;username&#125;&quot;)</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSocket</span> &#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">onlineCount</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, WebSocket&gt; clients = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;String, WebSocket&gt;();  </span><br><span class="line">    <span class="keyword">private</span> Session session;  </span><br><span class="line">    <span class="keyword">private</span> String username;  </span><br><span class="line">      </span><br><span class="line">    <span class="meta">@OnOpen</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onOpen</span><span class="params">(<span class="meta">@PathParam(&quot;username&quot;)</span> String username, Session session)</span> <span class="keyword">throws</span> IOException &#123;  </span><br><span class="line">  </span><br><span class="line">        <span class="built_in">this</span>.username = username;  </span><br><span class="line">        <span class="built_in">this</span>.session = session;  </span><br><span class="line">          </span><br><span class="line">        addOnlineCount();  </span><br><span class="line">        clients.put(username, <span class="built_in">this</span>);  </span><br><span class="line">        System.out.println(<span class="string">&quot;已连接&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@OnClose</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClose</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;  </span><br><span class="line">        clients.remove(username);  </span><br><span class="line">        subOnlineCount();  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@OnMessage</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(String message)</span> <span class="keyword">throws</span> IOException &#123;  </span><br><span class="line">  </span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">jsonTo</span> <span class="operator">=</span> JSONObject.fromObject(message);  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span> (!jsonTo.get(<span class="string">&quot;To&quot;</span>).equals(<span class="string">&quot;All&quot;</span>))&#123;  </span><br><span class="line">            sendMessageTo(<span class="string">&quot;给一个人&quot;</span>, jsonTo.get(<span class="string">&quot;To&quot;</span>).toString());  </span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">            sendMessageAll(<span class="string">&quot;给所有人&quot;</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@OnError</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onError</span><span class="params">(Session session, Throwable error)</span> &#123;  </span><br><span class="line">        error.printStackTrace();  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendMessageTo</span><span class="params">(String message, String To)</span> <span class="keyword">throws</span> IOException &#123;  </span><br><span class="line">        <span class="comment">// session.getBasicRemote().sendText(message);  </span></span><br><span class="line">        <span class="comment">//session.getAsyncRemote().sendText(message);  </span></span><br><span class="line">        <span class="keyword">for</span> (WebSocket item : clients.values()) &#123;  </span><br><span class="line">            <span class="keyword">if</span> (item.username.equals(To) )  </span><br><span class="line">                item.session.getAsyncRemote().sendText(message);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendMessageAll</span><span class="params">(String message)</span> <span class="keyword">throws</span> IOException &#123;  </span><br><span class="line">        <span class="keyword">for</span> (WebSocket item : clients.values()) &#123;  </span><br><span class="line">            item.session.getAsyncRemote().sendText(message);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">          </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="type">int</span> <span class="title function_">getOnlineCount</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> onlineCount;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">addOnlineCount</span><span class="params">()</span> &#123;  </span><br><span class="line">        WebSocket.onlineCount++;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">subOnlineCount</span><span class="params">()</span> &#123;  </span><br><span class="line">        WebSocket.onlineCount--;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Map&lt;String, WebSocket&gt; <span class="title function_">getClients</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> clients;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>客户端在JavaScript中调用即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> websocket = <span class="literal">null</span>;  </span><br><span class="line"><span class="keyword">var</span> username = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;name&quot;</span>);  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//判断当前浏览器是否支持WebSocket  </span></span><br><span class="line"><span class="keyword">if</span> (<span class="string">&#x27;WebSocket&#x27;</span> <span class="keyword">in</span> <span class="variable language_">window</span>) &#123;  </span><br><span class="line">    websocket = <span class="keyword">new</span> <span class="title class_">WebSocket</span>(<span class="string">&quot;ws://&quot;</span> + <span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">host</span> + <span class="string">&quot;/WebChat/websocket/&quot;</span> + username + <span class="string">&quot;/&quot;</span>+ _img);  </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;当前浏览器 Not support websocket&#x27;</span>)  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//连接发生错误的回调方法  </span></span><br><span class="line">websocket.<span class="property">onerror</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    <span class="title function_">setMessageInnerHTML</span>(<span class="string">&quot;WebSocket连接发生错误&quot;</span>);  </span><br><span class="line">&#125;;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//连接成功建立的回调方法  </span></span><br><span class="line">websocket.<span class="property">onopen</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    <span class="title function_">setMessageInnerHTML</span>(<span class="string">&quot;WebSocket连接成功&quot;</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//接收到消息的回调方法  </span></span><br><span class="line">websocket.<span class="property">onmessage</span> = <span class="keyword">function</span>(<span class="params">event</span>) &#123;  </span><br><span class="line">    <span class="title function_">setMessageInnerHTML</span>(event.<span class="property">data</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//连接关闭的回调方法  </span></span><br><span class="line">websocket.<span class="property">onclose</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    <span class="title function_">setMessageInnerHTML</span>(<span class="string">&quot;WebSocket连接关闭&quot;</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。  </span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">onbeforeunload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    <span class="title function_">closeWebSocket</span>();  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//关闭WebSocket连接  </span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">closeWebSocket</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    websocket.<span class="title function_">close</span>();  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>发送消息只需要使用websocket.send(“发送消息”)，就可以触发服务端的onMessage()方法，当连接时，触发服务器端onOpen()方法，此时也可以调用发送消息的方法去发送消息。关闭websocket时，触发服务器端onclose()方法，此时也可以发送消息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">WebSocket</span> <span class="variable">ws</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WebSocket</span>();</span><br><span class="line"></span><br><span class="line"><span class="type">JSONObject</span> <span class="variable">jo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">jo.put(<span class="string">&quot;message&quot;</span>, <span class="string">&quot;这是后台返回的消息！&quot;</span>);</span><br><span class="line">jo.put(<span class="string">&quot;To&quot;</span>,invIO.getIoEmployeeUid());</span><br><span class="line">ws.onMessage(jo.toString());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTest</span>&#123;</span><br><span class="line"></span><br><span class="line">　　<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] arg0)</span>&#123;</span><br><span class="line">　　　　<span class="type">MyWebSocketClient</span> <span class="variable">myClient</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyWebSocketClient</span>(<span class="string">&quot;此处为websocket服务端URI&quot;</span>);</span><br><span class="line">　　　　<span class="comment">// 往websocket服务端发送数据</span></span><br><span class="line">　　　　myClient.send(<span class="string">&quot;此为要发送的数据内容&quot;</span>);</span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/javase/IO/Net/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javase/" rel="tag">javase</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/javase/IO/IO/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            I/O
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/javaee/spring/Spring/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Spring</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

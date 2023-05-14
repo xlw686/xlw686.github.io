@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>操作系统理论 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-理论基础/操作系统/操作系统理论"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  操作系统理论
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/">理论基础</a> / <a class="article-category-link" href="/categories/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">16 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><hr>
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>操作系统(Operation System) 是负责管理计算机硬件与软件资源的软件程序，同时为用户提供一个与系统交互的操作界面。</p>
+<ul>
+<li><strong>内核</strong>：能操作硬件，用于提供系统服务。比如文件管理、虚拟内存、设备 I/O 等。</li>
+<li><strong>外壳</strong>：围绕内核，为用户提供服务的应用程序。</li>
+</ul>
+<h3 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h3><p>出于安全考虑，计算机不允许操作系统外的其它软件执行特权指令：</p>
+<ol>
+<li>执行用户程序时 CPU 工作在用户态(user mode)</li>
+<li>执行操作系统时 CPU 工作在系统态(kernel mode)</li>
+</ol>
+<p>用户程序如果想实现以下功能，就必须通过系统调用方式向操作系统提出服务请求，并由操作系统代为完成。</p>
+<ul>
+<li>设备管理：设备的启动、请求和释放。</li>
+<li>进程管理：进程的状态切换、通信。</li>
+<li>内存管理：内存的分配回收、获取作业占用内存区大小及地址。</li>
+<li>文件管理：文件的读写、创建及删除。</li>
+</ul>
+<h4 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h4><p>用户态向核心态的切换由硬件实现，可通过中断或异常触发。</p>
+<ul>
+<li>中断（外中断）：接收到外部中断指令、时间片结束等方式触发。中断原因和当前程序无关。</li>
+<li>异常（内中断）：当前程序执行出错，如地址越界、算术溢出、虚存缺页等触发。也可以被陷入指令触发。</li>
+</ul>
+<hr>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h3 id="内存类型"><a href="#内存类型" class="headerlink" title="内存类型"></a>内存类型</h3><ul>
+<li>Cache</li>
+<li>主存</li>
+<li>辅存</li>
+</ul>
+<h3 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h3><p>CPU 可以对内存直接读写数据，但不能直接对外部设备（如磁盘）读写数据。</p>
+<p>进程进行一次作业时，必须将要使用的磁盘数据全部置换到内存中供 CPU 使用。直到作业结束，才允许释放内存空间。</p>
+<h4 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h4><p>我们将内存空间分为固定大小的页，磁盘分为大小相同的块。进程调用连续数据块时，会分散置换到内存的各个空闲页中被 CPU 使用。</p>
+<p>这样不连续的存储方式，可以显著提高内存利用率。如果为每个进程分配连续的内存空间，当内存空间大小发生动态变化时，会产生大量内存碎片。</p>
+<h4 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h4><p>负责查找进程在内存中分散存储的内存页。每个进程拥有一个页表，映射进程页的逻辑地址和物理地址。便于查找。</p>
+<ul>
+<li><strong>多级页表</strong></li>
+</ul>
+<p>页表也存储在内存页中。当进程使用大量存储空间时，页表也会占用多个内存页，导致查询效率降低。</p>
+<p>因此我们为页表建立页表，建立层次结构。方便快速查询到页表项。通过虚拟内存技术把部分二级页表置换到磁盘中，也可以节省内存空间。</p>
+<ul>
+<li><strong>TLB（快表）</strong> </li>
+</ul>
+<p>使用 Cache 存储，负责映射最近使用的内存页逻辑地址和物理地址。对高频数据的访问可以不经过内存，加速查找。</p>
+<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><hr>
+<h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><p>在 Linux 操作系统中，所有被操作系统管理的资源，例如网络接口卡、磁盘驱动器、打印机、输入输出设备、普通文件或是目录都被看作是一个文件。</p>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p><strong>Linux 支持 5 种文件类型 ：</strong></p>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通文件</td>
+<td>存储信息和数据</td>
+<td>代码、可执行文件、图片</td>
+</tr>
+<tr>
+<td>目录文件</td>
+<td>管理文件和子目录</td>
+<td>文件夹</td>
+</tr>
+<tr>
+<td>链接文件</td>
+<td>不同目录下文件共享</td>
+<td>对于每个符号链接，都由系统创建链接文件指向具体位置</td>
+</tr>
+<tr>
+<td>设备文件</td>
+<td>访问硬件设备</td>
+<td>键盘、鼠标</td>
+</tr>
+<tr>
+<td>命名管道</td>
+<td>进程之间的通信</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>Linux 文件系统的结构层次鲜明，就像一棵倒立的树，最顶层是其根目录 <strong>/root</strong>：</p>
+<p><strong>常见子目录说明：</strong></p>
+<ul>
+<li><strong>/bin：</strong> 存放二进制可执行文件(ls、cat、mkdir等)，常用命令一般都在这里；</li>
+<li><strong>/etc：</strong>  存放系统管理和配置文件；</li>
+<li><strong>/home：</strong>  存放所有用户文件的根目录，是用户主目录的基点，比如用户user的主目录就是/home/user，可以用~user表示；</li>
+<li><strong>/usr ：</strong> 用于存放系统应用程序；</li>
+<li><strong>/opt：</strong> 额外安装的可选应用程序包所放置的位置。一般情况下，我们可以把tomcat等都安装到这里；</li>
+<li><strong>/proc：</strong>  虚拟文件系统目录，是系统内存的映射。可直接访问这个目录来获取系统信息；</li>
+<li><strong>/root：</strong>  超级用户（系统管理员）的主目录（特权阶级^o^）；</li>
+<li><strong>/sbin:</strong>  存放二进制可执行文件，只有 root 才能访问。通常存放系统管理员使用的系统级别的管理命令和程序。如ifconfig等；</li>
+<li><strong>/dev：</strong> 用于存放设备文件；</li>
+<li><strong>/mnt：</strong> 系统管理员安装临时文件系统的安装点，系统提供这个目录是让用户临时挂载其他的文件系统；</li>
+<li><strong>/boot：</strong>  存放用于系统引导时使用的各种文件；</li>
+<li><strong>/lib ：</strong>   存放着和系统运行相关的库文件 ；</li>
+<li><strong>/tmp：</strong> 用于存放各种临时文件，是公用的临时文件存储点；</li>
+<li><strong>/var：</strong> 用于存放运行时需要改变数据的文件，也是某些大文件的溢出区，比方说各种服务的日志文件（系统启动日志等。）等；</li>
+<li><strong>/lost+found：</strong>  这个目录平时是空的，系统非正常关机而留下“无家可归”的文件（windows下叫什么.chk）就在这里。</li>
+</ul>
+<h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2><p>Linux命令大全：<a target="_blank" rel="noopener" href="http://man.linuxde.net/">http://man.linuxde.net/</a></p>
+<h3 id="目录切换命令"><a href="#目录切换命令" class="headerlink" title="目录切换命令"></a>目录切换命令</h3><ul>
+<li><strong><code>cd usr</code>：</strong>   切换到该目录下usr目录  </li>
+<li><strong><code>cd ..（或cd../）</code>：</strong>  切换到上一层目录 </li>
+<li><strong><code>cd /</code>：</strong>   切换到系统根目录  </li>
+<li><strong><code>cd ~</code>：</strong>   切换到用户主目录 </li>
+<li><strong><code>cd -</code>：</strong>   切换到上一个操作所在目录</li>
+</ul>
+<h3 id="目录操作命令"><a href="#目录操作命令" class="headerlink" title="目录操作命令"></a>目录操作命令</h3><ol>
+<li><p><strong><code>mkdir 目录名称</code>：</strong> 增加目录</p>
+</li>
+<li><p>**<code>ls或者ll</code>**（ll是ls -l的别名，ll命令可以看到该目录下的所有目录和文件的详细信息）：查看目录信息</p>
+</li>
+<li><p><strong><code>find 目录 参数</code>：</strong> 寻找目录（查）</p>
+<p> 示例：</p>
+<ul>
+<li>列出当前目录及子目录下所有文件和文件夹: <code>find .</code></li>
+<li>在<code>/home</code>目录下查找以.txt结尾的文件名:<code>find /home -name &quot;*.txt&quot;</code></li>
+<li>同上，但忽略大小写: <code>find /home -iname &quot;*.txt&quot;</code></li>
+<li>当前目录及子目录下查找所有以.txt和.pdf结尾的文件:<code>find . \( -name &quot;*.txt&quot; -o -name &quot;*.pdf&quot; \)</code>或<code>find . -name &quot;*.txt&quot; -o -name &quot;*.pdf&quot; </code></li>
+</ul>
+</li>
+<li><p><strong><code>mv 目录名称 新目录名称</code>：</strong> 修改目录的名称（改）</p>
+<p>注意：mv的语法不仅可以对目录进行重命名而且也可以对各种文件，压缩包等进行  重命名的操作。mv命令用来对文件或目录重新命名，或者将文件从一个目录移到另一个目录中。后面会介绍到mv命令的另一个用法。</p>
+</li>
+<li><p><strong><code>mv 目录名称 目录的新位置</code>：</strong>  移动目录的位置—剪切（改）</p>
+<p> 注意：mv语法不仅可以对目录进行剪切操作，对文件和压缩包等都可执行剪切操作。另外mv与cp的结果不同，mv好像文件“搬家”，文件个数并未增加。而cp对文件进行复制，文件个数增加了。</p>
+</li>
+<li><p><strong><code>cp -r 目录名称 目录拷贝的目标位置</code>：</strong> 拷贝目录（改），-r代表递归拷贝 </p>
+<p> 注意：cp命令不仅可以拷贝目录还可以拷贝文件，压缩包等，拷贝文件和压缩包时不  用写-r递归</p>
+</li>
+<li><p><strong><code>rm [-rf] 目录</code>:</strong> 删除目录（删）</p>
+<p> 注意：rm不仅可以删除目录，也可以删除其他文件或压缩包，为了增强大家的记忆，  无论删除任何目录或文件，都直接使用<code>rm -rf</code> 目录/文件/压缩包</p>
+</li>
+</ol>
+<h3 id="文件操作命令"><a href="#文件操作命令" class="headerlink" title="文件操作命令"></a>文件操作命令</h3><ol>
+<li><p><strong><code>touch 文件名称</code>:</strong>  文件的创建（增）</p>
+</li>
+<li><p><strong><code>cat/more/less/tail 文件名称</code></strong> 文件的查看（查）</p>
+<ul>
+<li><strong><code>cat</code>：</strong> 查看显示文件内容</li>
+<li><strong><code>more</code>：</strong> 可以显示百分比，回车可以向下一行， 空格可以向下一页，q可以退出查看</li>
+<li><strong><code>less</code>：</strong> 可以使用键盘上的PgUp和PgDn向上 和向下翻页，q结束查看</li>
+<li><strong><code>tail-10</code> ：</strong> 查看文件的后10行，Ctrl+C结束</li>
+</ul>
+<p>注意：命令 tail -f 文件 可以对某个文件进行动态监控，例如tomcat的日志文件，  会随着程序的运行，日志会变化，可以使用tail -f catalina-2016-11-11.log 监控 文 件的变化 </p>
+</li>
+<li><p><strong><code>vim 文件</code>：</strong>  修改文件的内容（改）</p>
+<p>vim编辑器是Linux中的强大组件，是vi编辑器的加强版，vim编辑器的命令和快捷方式有很多，但此处不一一阐述，大家也无需研究的很透彻，使用vim编辑修改文件的方式基本会使用就可以了。</p>
+<p><strong>在实际开发中，使用vim编辑器主要作用就是修改配置文件，下面是一般步骤：</strong></p>
+<p> vim 文件——&gt;进入文件—–&gt;命令模式——&gt;按i进入编辑模式—–&gt;编辑文件  ——-&gt;按Esc进入底行模式—–&gt;输入：wq/q! （输入wq代表写入内容并退出，即保存；输入q!代表强制退出不保存。）</p>
+</li>
+<li><p><strong><code>rm -rf 文件</code>：</strong> 删除文件（删）</p>
+<p> 同目录删除：熟记 <code>rm -rf</code> 文件 即可</p>
+</li>
+</ol>
+<h3 id="文件压缩命令"><a href="#文件压缩命令" class="headerlink" title="文件压缩命令"></a>文件压缩命令</h3><p><strong>1）打包并压缩文件：</strong></p>
+<p>Linux中的打包文件一般是以.tar结尾的，压缩的命令一般是以.gz结尾的。</p>
+<p>而一般情况下打包和压缩是一起进行的，打包并压缩后的文件的后缀名一般.tar.gz。<br>命令：**<code>tar -zcvf 打包压缩后的文件名 要打包压缩的文件</code>**<br>其中：</p>
+<p>  z：调用gzip压缩命令进行压缩</p>
+<p>  c：打包文件</p>
+<p>  v：显示运行过程</p>
+<p>  f：指定文件名</p>
+<p>比如：假如test目录下有三个文件分别是：aaa.txt bbb.txt ccc.txt，如果我们要打包test目录并指定压缩后的压缩包名称为test.tar.gz可以使用命令：**<code>tar -zcvf test.tar.gz aaa.txt bbb.txt ccc.txt</code>或：<code>tar -zcvf test.tar.gz       /test/</code>**</p>
+<p><strong>2）解压压缩包：</strong></p>
+<p>命令：tar [-xvf] 压缩文件</p>
+<p>其中：x：代表解压</p>
+<p>示例：</p>
+<p>1 将/test下的test.tar.gz解压到当前目录下可以使用命令：**<code>tar -xvf test.tar.gz</code>**</p>
+<p>2 将/test下的test.tar.gz解压到根目录/usr下:**<code>tar -xvf test.tar.gz -C /usr</code>**（- C代表指定解压的位置）</p>
+<h3 id="操作权限命令"><a href="#操作权限命令" class="headerlink" title="操作权限命令"></a>操作权限命令</h3><p> 操作系统中每个文件都拥有特定的权限、所属用户和所属组。权限是操作系统用来限制资源访问的机制，在Linux中权限一般分为读(readable)、写(writable)和执行(excutable)，分为三组。分别对应文件的属主(owner)，属组(group)和其他用户(other)，通过这样的机制来限制哪些用户、哪些组可以对特定的文件进行什么样的操作。通过 <strong><code>ls -l</code></strong> 命令我们可以  查看某个目录下的文件或目录的权限</p>
+<p>示例：在随意某个目录下<code>ls -l</code></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/7/5/1646955be781daaa?w=589&h=228&f=png&s=16360"></p>
+<p>第一列的内容的信息解释如下：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/7/5/16469565b6951791?w=489&h=209&f=png&s=39791"></p>
+<blockquote>
+<p>下面将详细讲解文件的类型、Linux中权限以及文件有所有者、所在组、其它组具体是什么？</p>
+</blockquote>
+<p><strong>文件的类型：</strong></p>
+<ul>
+<li>d： 代表目录</li>
+<li>-： 代表文件</li>
+<li>l： 代表软链接（可以认为是window中的快捷方式）</li>
+</ul>
+<p><strong>Linux中权限分为以下几种：</strong></p>
+<ul>
+<li>r：代表权限是可读，r也可以用数字4表示</li>
+<li>w：代表权限是可写，w也可以用数字2表示</li>
+<li>x：代表权限是可执行，x也可以用数字1表示</li>
+</ul>
+<p><strong>文件和目录权限的区别：</strong></p>
+<p> 对文件和目录而言，读写执行表示不同的意义。</p>
+<p> 对于文件：</p>
+<table>
+<thead>
+<tr>
+<th align="left">权限名称</th>
+<th align="right">可执行操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">r</td>
+<td align="right">可以使用cat查看文件的内容</td>
+</tr>
+<tr>
+<td align="left">w</td>
+<td align="right">可以修改文件的内容</td>
+</tr>
+<tr>
+<td align="left">x</td>
+<td align="right">可以将其运行为二进制文件</td>
+</tr>
+</tbody></table>
+<p> 对于目录：</p>
+<table>
+<thead>
+<tr>
+<th align="left">权限名称</th>
+<th align="right">可执行操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">r</td>
+<td align="right">可以查看目录下列表</td>
+</tr>
+<tr>
+<td align="left">w</td>
+<td align="right">可以创建和删除目录下文件</td>
+</tr>
+<tr>
+<td align="left">x</td>
+<td align="right">可以使用cd进入目录</td>
+</tr>
+</tbody></table>
+<p><strong>需要注意的是超级用户可以无视普通用户的权限，即使文件目录权限是000，依旧可以访问。</strong><br><strong>在linux中的每个用户必须属于一个组，不能独立于组外。在linux中每个文件有所有者、所在组、其它组的概念。</strong></p>
+<ul>
+<li><p><strong>所有者</strong></p>
+<p>一般为文件的创建者，谁创建了该文件，就天然的成为该文件的所有者，用ls ‐ahl命令可以看到文件的所有者 也可以使用chown 用户名  文件名来修改文件的所有者 。</p>
+</li>
+<li><p><strong>文件所在组</strong></p>
+<p>当某个用户创建了一个文件后，这个文件的所在组就是该用户所在的组 用ls ‐ahl命令可以看到文件的所有组 也可以使用chgrp  组名  文件名来修改文件所在的组。 </p>
+</li>
+<li><p><strong>其它组</strong></p>
+<p>除开文件的所有者和所在组的用户外，系统的其它用户都是文件的其它组 </p>
+</li>
+</ul>
+<blockquote>
+<p>我们再来看看如何修改文件/目录的权限。</p>
+</blockquote>
+<p><strong>修改文件/目录的权限的命令：<code>chmod</code></strong></p>
+<p>示例：修改/test下的aaa.txt的权限为属主有全部权限，属主所在的组有读写权限，<br>其他用户只有读的权限</p>
+<p><strong><code>chmod u=rwx,g=rw,o=r aaa.txt</code></strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/7/5/164697447dc6ecac?w=525&h=246&f=png&s=12362"></p>
+<p>上述示例还可以使用数字表示：</p>
+<p>chmod 764 aaa.txt</p>
+<p><strong>补充一个比较常用的东西:</strong></p>
+<p>假如我们装了一个zookeeper，我们每次开机到要求其自动启动该怎么办？</p>
+<ol>
+<li>新建一个脚本zookeeper</li>
+<li>为新建的脚本zookeeper添加可执行权限，命令是:<code>chmod +x zookeeper</code></li>
+<li>把zookeeper这个脚本添加到开机启动项里面，命令是：<code> chkconfig --add  zookeeper</code></li>
+<li>如果想看看是否添加成功，命令是：<code>chkconfig --list</code></li>
+</ol>
+<h3 id="用户管理命令"><a href="#用户管理命令" class="headerlink" title="用户管理命令"></a>用户管理命令</h3><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。</p>
+<p><strong>Linux用户管理相关命令:</strong></p>
+<ul>
+<li><code>useradd 选项 用户名</code>:添加用户账号</li>
+<li><code>userdel 选项 用户名</code>:删除用户帐号</li>
+<li><code>usermod 选项 用户名</code>:修改帐号</li>
+<li><code>passwd 用户名</code>:更改或创建用户的密码</li>
+<li><code>passwd -S 用户名</code> :显示用户账号密码信息</li>
+<li><code>passwd -d 用户名</code>:  清除用户密码</li>
+</ul>
+<p>useradd命令用于Linux中创建的新的系统用户。useradd可用来建立用户帐号。帐号建好之后，再用passwd设定帐号的密码．而可用userdel删除帐号。使用useradd指令所建立的帐号，实际上是保存在/etc/passwd文本文件中。</p>
+<p>passwd命令用于设置用户的认证信息，包括用户密码、密码过期时间等。系统管理者则能用它管理系统用户的密码。只有管理者可以指定用户名称，一般用户只能变更自己的密码。</p>
+<p><strong>用户组</strong></p>
+<p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同Linux 系统对用户组的规定有所不同，如Linux下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。</p>
+<p>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对/etc/group文件的更新。</p>
+<p><strong>Linux系统用户组的管理相关命令:</strong></p>
+<ul>
+<li><code>groupadd 选项 用户组</code> :增加一个新的用户组</li>
+<li><code>groupdel 用户组</code>:要删除一个已有的用户组</li>
+<li><code>groupmod 选项 用户组</code> : 修改用户组的属性</li>
+</ul>
+<h3 id="其他常用命令"><a href="#其他常用命令" class="headerlink" title="其他常用命令"></a>其他常用命令</h3><ul>
+<li><p><strong><code>pwd</code>：</strong> 显示当前所在位置</p>
+</li>
+<li><p><code>sudo + 其他命令</code>：以系统管理者的身份执行指令，也就是说，经由 sudo 所执行的指令就好像是 root 亲自执行。</p>
+</li>
+<li><p><strong><code>grep 要搜索的字符串 要搜索的文件 --color</code>：</strong> 搜索命令，–color代表高亮显示</p>
+</li>
+<li><p><strong><code>ps -ef</code>/<code>ps -aux</code>：</strong> 这两个命令都是查看当前系统正在运行进程，两者的区别是展示格式不同。如果想要查看特定的进程可以使用这样的格式：**<code>ps aux|grep redis</code>** （查看包括redis字符串的进程），也可使用 <code>pgrep redis -a</code>。</p>
+<p>注意：如果直接用ps（（Process Status））命令，会显示所有进程的状态，通常结合grep命令查看某进程的状态。</p>
+</li>
+<li><p><strong><code>kill -9 进程的pid</code>：</strong> 杀死进程（-9 表示强制终止。）</p>
+<p>先用ps查找进程，然后用kill杀掉</p>
+</li>
+<li><p><strong>网络通信命令：</strong></p>
+<ul>
+<li>查看当前系统的网卡信息：ifconfig</li>
+<li>查看与某台机器的连接情况：ping </li>
+<li>查看当前系统的端口使用：netstat -an</li>
+</ul>
+</li>
+<li><p><strong>net-tools 和 iproute2 ：</strong><br>  <code>net-tools</code>起源于BSD的TCP/IP工具箱，后来成为老版本Linux内核中配置网络功能的工具。但自2001年起，Linux社区已经对其停止维护。同时，一些Linux发行版比如Arch Linux和CentOS/RHEL 7则已经完全抛弃了net-tools，只支持<code>iproute2</code>。linux ip命令类似于ifconfig，但功能更强大，旨在替代它。更多详情请阅读<a target="_blank" rel="noopener" href="https://linoxide.com/linux-command/use-ip-command-linux">如何在Linux中使用IP命令和示例</a></p>
+</li>
+<li><p><strong><code>shutdown</code>：</strong>  <code>shutdown -h now</code>： 指定现在立即关机；<code>shutdown +5 &quot;System will shutdown after 5 minutes&quot;</code>：指定5分钟后关机，同时送出警告信息给登入用户。</p>
+</li>
+<li><p><strong><code>reboot</code>：</strong>  <strong><code>reboot</code>：</strong>  重开机。**<code>reboot -w</code>：** 做个重开机的模拟（只有纪录并不会真的重开机）。</p>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/" rel="tag">理论基础</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Linux
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E5%85%B6%E5%AE%83/%E6%9C%8D%E5%8A%A1%E5%99%A8/nginx/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">nginx</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

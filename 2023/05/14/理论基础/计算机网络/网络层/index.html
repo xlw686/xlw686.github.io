@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta name="description" content="一个简单的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>网络层 |  空唤晴</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="空唤晴" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-理论基础/计算机网络/网络层"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  网络层
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82/" class="article-date">
+  <time datetime="2023-05-14T03:01:41.000Z" itemprop="datePublished">2023-05-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/">理论基础</a> / <a class="article-category-link" href="/categories/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h1><hr>
+<h2 id="网络层功能"><a href="#网络层功能" class="headerlink" title="网络层功能"></a>网络层功能</h2><p>以路由器为中继系统连接不同结构的网络，统一使用 IP 协议进行相互通信。</p>
+<p>传输层报文在网络层将被封装成 IP 数据报进行分组转发，路由器将根据 IP 地址选择转发路由。</p>
+<hr>
+<h2 id="路由选择协议"><a href="#路由选择协议" class="headerlink" title="路由选择协议"></a>路由选择协议</h2><p>路由器通过查询路由表选择转发路由，当路由信息发生变化时，就需要路由器根绝路由选择协议动态更新路由表。</p>
+<p>为方便选择转发路由，我们将互联网分为多个自治系统，在自治系统内可包含多个局域网。一个自治系统内所有网络一般都属于同一个行政单位，全部路由器在自治系统内都是联通的。</p>
+<h3 id="域间路由"><a href="#域间路由" class="headerlink" title="域间路由"></a>域间路由</h3><p>负责在自治系统之间选择路由传递 IP 数据报。</p>
+<ul>
+<li><strong>BGP 协议</strong></li>
+</ul>
+<p>应用层协议，基于 TCP 实现。只负责选择一条尽可能好的路径，将 IP 数据报传达到目标自治系统内。</p>
+<h3 id="域内路由"><a href="#域内路由" class="headerlink" title="域内路由"></a>域内路由</h3><p>负责在自治系统内选择路由传递 IP 数据报。</p>
+<ul>
+<li><strong>RIP 协议</strong></li>
+</ul>
+<p>应用层协议，基于 UDP 实现。相邻路由器之间会定时交换全部路由表信息。路由器会根据到达目的地址的最少跳数（经过路由器数量）来选择最短路由，更新自己的路由表信息。</p>
+<p>使用简单方便。但最大跳数只支持 15（16 表示不可达），不适用于大型互联网。且会出现 “坏消息传得慢” 现象。</p>
+<ul>
+<li><strong>OSPF 协议</strong></li>
+</ul>
+<p>网络层协议，使用 IP 数据报传输。</p>
+<ol>
+<li>相邻路由器之间会定时交互以确保对方可达（问候分组）。</li>
+<li>路由器刚开始工作时，会和相邻路由器交换路由信息（数据库描述分组），缺少数据时向相邻路由器索要（链路状态请求分组）。</li>
+<li>当链路状态发生变化时，路由器会向区域内的全部路由器发送路由表信息（链路状态更新分组），路由器收到后返回确认（链路状态确认分组）。</li>
+</ol>
+<hr>
+<h2 id="IP-协议"><a href="#IP-协议" class="headerlink" title="IP 协议"></a>IP 协议</h2><p>IP 协议是网络层的核心协议，负责定义 IP 数据报的数据格式和传输规则。IP 协议无连接且不可靠。目前主要使用的 IP 协议版本为 IPv4 。</p>
+<h3 id="IP-数据报"><a href="#IP-数据报" class="headerlink" title="IP 数据报"></a>IP 数据报</h3><p>IP 数据报由首部和数据两部分组成。</p>
+<p><img src="%E5%88%86%E7%BB%84.png" alt="分组"></p>
+<p>首部长度为 20 + 4N 字节，含有以下字段：</p>
+<ul>
+<li><strong>版本</strong>：4</li>
+<li><strong>首部长度</strong> ：(4 bit) 单位 4B ，首部最大长度为 60 字节。</li>
+<li><strong>总长度</strong>：(16 bit) 单位 1B ，IP 数据报最大长度为 65535 字节。 </li>
+<li><strong>标识</strong>：(16 bit) 分片后的 IP 数据报使用同一个标识，以便组装。</li>
+<li><strong>标志</strong>：(3 bit) 标志是否允许分片，以及是否是第一个分片。</li>
+<li><strong>片偏移</strong>：(13 bit) 单位 8B ，标识分组分片后的偏移量，以便组装。</li>
+<li><strong>首部校验和</strong>：(16 bit) </li>
+<li><strong>生存时间 TTL</strong>：(8 bit) IP 数据报剩余寿命，每次转发后自减。</li>
+<li><strong>协议</strong>：(8 bit) 使用的上层协议，即数据报到达后交付者。1/ICMP 2/IGMP 6/TCP 17/UDP</li>
+<li><strong>源地址</strong>：(32 bit)</li>
+<li><strong>目的地址</strong>：(32 bit)</li>
+</ul>
+<p>为什么分片：IP 数据报最大 65535 字节，但以太网帧限制为 1500 字节。</p>
+<h3 id="IP-地址"><a href="#IP-地址" class="headerlink" title="IP 地址"></a>IP 地址</h3><p>在 IPv4 协议使用 32bit 的 IP 地址标识主机。IP 地址由网络号和主机号两部分组成，分为以下几种类型：</p>
+<ul>
+<li>**A 类地址 (1-126)**：8bit 网络号 + 24bit 主机号</li>
+<li>**B 类地址 (128-191)**：16bit 网络号 + 16bit 主机号</li>
+<li>**C 类地址 (192-223)**：24bit 网络号 + 8bit 主机号</li>
+<li>**D 类地址 (224-239)**：多播地址</li>
+</ul>
+<h4 id="特殊地址"><a href="#特殊地址" class="headerlink" title="特殊地址"></a>特殊地址</h4><ul>
+<li><code>0.0.0.0</code> 和 <code>127.0.0.0</code> 表示当前主机</li>
+<li><code>255.255.255.255</code> 表示当前网络的广播地址 </li>
+<li>主机号全为 0 表示 指定网络本身： 例如 <code>202.98.174.0</code> </li>
+<li>主机号全为 1 表示 指定网络的广播地址：例如 <code>202.98.174.255</code> </li>
+</ul>
+<h4 id="子网编码"><a href="#子网编码" class="headerlink" title="子网编码"></a>子网编码</h4><p>为节省 IP 地址，IP 协议对网络内部进行了再划分，使一个网络号内部可以存储多个子网。IP 地址实际由网络号、子网号和主机号三部分组成。</p>
+<p>在传输 IP 地址时，我们同样会发送 32bit 的子网掩码（前面全为 1 后面全为 0）来区分子网和主机。例如 IP 地址 <code>136.34.5.56</code> 的子网掩码为 <code>255.255.255.0</code> ，那么子网号就是 <code>136.34.5.0</code>.</p>
+<h4 id="网址转换-NAT"><a href="#网址转换-NAT" class="headerlink" title="网址转换 NAT"></a>网址转换 NAT</h4><p>为节省 IP 地址，IP 协议允许专用网络内部采用私有 IP 地址标识主机，整个专用网络共享一个公用 IP 地址。</p>
+<p>多个本地主机在公网共用一个 IP 地址，必须通过端口号来相互区分。公网 IP 地址/端口号和私有 IP 地址/端口号的对应关系保存在负责连接内外网的 NAT 路由器中，在转发 IP 数据报时会自动读取传输层报文并进行 NAT 转换：</p>
+<ul>
+<li>SNAT 本地主机向公网发送请求时，NAT 路由器转发时会修改源地址和端口号，切换为公有。</li>
+<li>DNAT 公网向本地主机发送请求时，NAT 路由器转发时会修改目的地址和端口号，切换为私有。</li>
+</ul>
+<p>为此 IP 协议划分出了专用的私有地址供专用网络内部使用，在公网中指向私有地址的 IP 数据报不会被转发。</p>
+<ul>
+<li>**A 类私有地址 (10)**：例如 <code>10.98.174.0</code> </li>
+<li>**B 类私有地址 (172.16-172.31)**：例如 <code>172.16.0.1</code> </li>
+<li>**C 类私有地址 (192.168)**：例如 <code>192.168.0.1</code> </li>
+</ul>
+<h4 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h4><p>最新版本的 IP 协议 IPv6 可以从根本上解决 IP 地址短缺问题，改用 128 bit 的全新 IP 地址标识主机。</p>
+<h3 id="辅助协议"><a href="#辅助协议" class="headerlink" title="辅助协议"></a>辅助协议</h3><h4 id="ARP-协议"><a href="#ARP-协议" class="headerlink" title="ARP 协议"></a>ARP 协议</h4><p>网络层协议，负责映射 IP 地址和 MAC 地址。</p>
+<p>主机会维护一个映射表记录同网络各主机 IP 地址和 MAC 地址的映射关系，通过查询映射表在网路内部转发 IP 分组。如果未记录则在局域网内部广播 ARP 请求，由目的主机返回其 IP 地址和 MAC 地址的映射关系。</p>
+<h4 id="DHCP-协议"><a href="#DHCP-协议" class="headerlink" title="DHCP 协议"></a>DHCP 协议</h4><p>基于 UDP 的传输层协议，为网络中的主机分配 IP 地址。</p>
+<ol>
+<li>主机启动时在网络内部广播 DHCP 发现消息：申请分配 IP 地址。</li>
+<li>网络内部的 DHCP 服务器接收到消息后广播 DHCP 提供消息：提供可分配的 IP 地址。</li>
+<li>主机接收到消息后广播广播 DHCP 请求消息：接受 IP 地址。</li>
+<li>网络内部的 DHCP 服务器接收到消息后广播 DHCP 确认消息：分配 IP 地址。</li>
+</ol>
+<h4 id="ICMP-协议"><a href="#ICMP-协议" class="headerlink" title="ICMP 协议"></a>ICMP 协议</h4><p>网络层协议，负责报告差错和异常情况，也可以用于询问(ping 指令)。</p>
+<p>当 IP 数据报传输出现异常时，会生成 ICMP 报文封装为 IP 数据报发回源主机报告异常情况。</p>
+<ol>
+<li>数据分片后，只会对第一个分片的 IP 数据报报告差错。</li>
+<li>封装 ICMP 报文的 IP 数据报出错后不会报告差错，防止 ICMP 报文泛滥。</li>
+<li>组播 IP 数据报出现异常不会报告差错。</li>
+</ol>
+<p><em>策略可以有效防止 Smurf 攻击：攻击者在网络散播错误源地址的 Ping 请求，导致大量机器向源地址返回 ping 回复使源地址主机瘫痪。</em></p>
+<p>ICMP 报文的前 32 bit 信息是固定的，为 类型/编号/数据校验和。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://xlw686.github.io/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yan/" rel="tag">yan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/" rel="tag">理论基础</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            应用层
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/14/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E5%B1%82/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">网络接口层</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> 空唤晴
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="空唤晴"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2023/01/01/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
